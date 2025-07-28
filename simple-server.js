@@ -98,7 +98,12 @@ async function updateCallFromWebhook(call) {
   }
 }
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Simple server running on port ${PORT}`);
-});
+// Export app for serverless
+module.exports = app;
+
+// Start server only if not in serverless environment
+if (process.env.NETLIFY !== 'true') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Simple server running on port ${PORT}`);
+  });
+}
