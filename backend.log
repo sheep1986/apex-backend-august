@@ -1,0 +1,1855 @@
+
+> apex-ai-calling-backend@1.0.0 dev /Users/seanwentz/Desktop/Apex/apps/backend
+> ts-node-dev --respawn --transpile-only server.ts
+
+[INFO] 15:04:00 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.6.3)
+🔍 Supabase initialization check:
+   - Has URL: true
+   - Has Key: true
+🔗 Supabase: Connecting to production database
+   URL: https://twigokrtbvigiqnaybfy.supabase.co
+   Using key type: service_role
+✅ Supabase: Connected successfully!
+⚠️ Stripe not initialized - missing or dummy API key (development mode)
+⚠️ Stripe webhook disabled for development
+🚀 Apex AI Calling Platform API Server running on port 3001
+📊 Health check: http://localhost:3001/api/health
+🔗 Frontend URL: http://localhost:5173
+🎯 Starting campaign automation system...
+🧹 Starting call cleanup service...
+🧹 Call cleanup service started (runs every 5 minutes)
+✅ Supabase connection test successful
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching VAPI settings: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1OTcsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MzcsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTI3LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.08mlRXYjFSDcDM7AOIe7O0EYMQmzogY6OTa3tX1C4RtkV6JtmNJiv4PdX-yjMhxkXCNv1nN96BRIGbwuySx_gnZhpfo5SMZyWPETmYhpiGlS00WXHFo60aAB35Viy5rOrjoEeohI7dmt3JDuIFpRj0VHsRANbu_1U3I9g3sSr6q0WiT2ckDIsI_pfks9hKBy0VPZcoiGBOuGjpfAb73CMmICJbeGIVjNVnGcnGBJJZ1KoRprUqe7Gf-mXN_t7SWuTM551Z90P9Hp4qeRgGBsgA4gaM4lPrvuuLBTnXtlLoSPLexnl71aoYgHLct9xx0U1zjk4MZkpSVWn--lK3xZPA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching VAPI settings: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1OTcsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MzcsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTI3LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.08mlRXYjFSDcDM7AOIe7O0EYMQmzogY6OTa3tX1C4RtkV6JtmNJiv4PdX-yjMhxkXCNv1nN96BRIGbwuySx_gnZhpfo5SMZyWPETmYhpiGlS00WXHFo60aAB35Viy5rOrjoEeohI7dmt3JDuIFpRj0VHsRANbu_1U3I9g3sSr6q0WiT2ckDIsI_pfks9hKBy0VPZcoiGBOuGjpfAb73CMmICJbeGIVjNVnGcnGBJJZ1KoRprUqe7Gf-mXN_t7SWuTM551Z90P9Hp4qeRgGBsgA4gaM4lPrvuuLBTnXtlLoSPLexnl71aoYgHLct9xx0U1zjk4MZkpSVWn--lK3xZPA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1ODgsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MjgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTE4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.EPWPGoJqctRNyFxLU1KwWUGDrWC-CTLPEFv3iwcSpI9-T0kvZxUCxkq46kdN93QZlwWuLy9p1870AgHi_p9HY-xm5JqXGSmkZYzseq0tEiQdmdf191Qw2fPKMdbdAh6gnmpQos_NVVsNSHFMsegRiR3MqRC2GogwN0WZVVlzRrtleIeS5iFYIFXumjMV1ZfrM2ljWR9694hrL7csL4sY45akfJpRTJWKFB41DTX9f2Jlt-VkyuLwQ4sv2td611S3PIAiJuyLgyWuNpzshmYhcHW4t6FnTMhWZF84-HNQCucQ88qdp56CrS0ABTlCdnPcyiaRYEt9mdO_n_eigNzMXQ
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔍 Fetching VAPI assistants for organization: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Checking organizations table for VAPI credentials...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🔍 Making VAPI API call to list assistants...
+🔑 Using API key: da8956d4-0...
+📍 API Base URL: https://api.vapi.ai
+🔐 Auth Header: Bearer ***
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+✅ VAPI assistants API response: {
+  status: 200,
+  dataLength: 11,
+  dataPreview: '11 assistants',
+  rawData: [
+    {
+      id: '8ccc374f-bc7e-4c31-9a26-11c92542c1cb',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Real-time Analysis Assistant',
+      voice: [Object],
+      createdAt: '2025-08-01T04:26:52.034Z',
+      updatedAt: '2025-08-01T04:26:52.034Z',
+      model: [Object],
+      firstMessage: "Hello! I'm your real-time conversation analysis assistant. I can analyze sentiment, detect emotions, and provide live insights during our conversation. How can I help you test these capabilities?",
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '465673b3-7064-4cb7-84a7-0647628eaf92',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      createdAt: '2025-08-01T03:41:10.693Z',
+      updatedAt: '2025-08-01T03:41:10.693Z',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Emerald Green Energy Demo',
+      voice: [Object],
+      createdAt: '2025-07-07T10:46:58.019Z',
+      updatedAt: '2025-07-30T17:57:07.202Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4646305f-829a-49fb-8dcc-a0cba2ad707d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:33:44.035Z',
+      updatedAt: '2025-06-26T11:34:15.288Z',
+      model: [Object],
+      firstMessage: 'Hello.',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'c39cd41d-4523-4c6c-bba3-be25f937021a',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:29:53.836Z',
+      updatedAt: '2025-06-26T11:30:54.809Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '724fac0a-f43c-4f96-8a57-c0f164c4a60f',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Marcus - Solar Energy Consultant',
+      voice: [Object],
+      createdAt: '2025-06-26T11:23:40.628Z',
+      updatedAt: '2025-06-26T12:01:17.013Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      backgroundSound: 'office',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'a31a30ac-6aa5-416d-8e21-28f2fe45001d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Watt Utilities Agent',
+      voice: [Object],
+      createdAt: '2025-06-02T07:22:47.691Z',
+      updatedAt: '2025-06-02T07:23:16.561Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'fc7afcac-972d-4e6c-b791-6d2577820ae9',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Artificial Media - Website',
+      voice: [Object],
+      createdAt: '2025-05-30T19:18:37.010Z',
+      updatedAt: '2025-06-02T14:43:28.144Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '2ba8bb47-0a31-4c23-972c-7799fc0e5ac3',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Gogo Utilities Agent ',
+      voice: [Object],
+      createdAt: '2025-05-30T11:23:12.285Z',
+      updatedAt: '2025-06-02T08:59:15.071Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'ac97d579-83ba-4bca-9da2-6be7fd914871',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Liz - Scottish Road Accident Claims',
+      voice: [Object],
+      createdAt: '2025-04-15T09:54:23.439Z',
+      updatedAt: '2025-04-15T12:23:32.401Z',
+      model: [Object],
+      firstMessage: 'Hello, this is Morgan from GrowthPartners. We help businesses improve their operational efficiency through custom software solutions. Do you have a few minutes to chat about how we might be able to help your business?',
+      voicemailMessage: "Hello, this is Morgan from GrowthPartners. I'm calling to discuss how our solutions might help your business operations. I'll try reaching you again, or feel free to call us back at your convenience.",
+      endCallMessage: 'Thank you for taking the time to discuss your needs with me today. Our team will be in touch with more information soon. Have a great day!',
+      transcriber: [Object],
+      clientMessages: [Array],
+      serverMessages: [Array],
+      hipaaEnabled: false,
+      backchannelingEnabled: false,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4d986f9e-9e32-4768-ac5c-1d82ba96857b',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'RTA Agent (Copy)',
+      voice: [Object],
+      createdAt: '2025-03-10T14:00:09.772Z',
+      updatedAt: '2025-03-17T11:25:37.729Z',
+      model: [Object],
+      firstMessage: 'Hello, Would it be possible to speak to Sean please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: false,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      compliancePlan: [Object],
+      isServerUrlSecretSet: false
+    }
+  ]
+}
+✅ Retrieved 11 assistants from VAPI
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1OTcsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MzcsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTI3LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.08mlRXYjFSDcDM7AOIe7O0EYMQmzogY6OTa3tX1C4RtkV6JtmNJiv4PdX-yjMhxkXCNv1nN96BRIGbwuySx_gnZhpfo5SMZyWPETmYhpiGlS00WXHFo60aAB35Viy5rOrjoEeohI7dmt3JDuIFpRj0VHsRANbu_1U3I9g3sSr6q0WiT2ckDIsI_pfks9hKBy0VPZcoiGBOuGjpfAb73CMmICJbeGIVjNVnGcnGBJJZ1KoRprUqe7Gf-mXN_t7SWuTM551Z90P9Hp4qeRgGBsgA4gaM4lPrvuuLBTnXtlLoSPLexnl71aoYgHLct9xx0U1zjk4MZkpSVWn--lK3xZPA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM1OTcsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1MzcsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTI3LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.08mlRXYjFSDcDM7AOIe7O0EYMQmzogY6OTa3tX1C4RtkV6JtmNJiv4PdX-yjMhxkXCNv1nN96BRIGbwuySx_gnZhpfo5SMZyWPETmYhpiGlS00WXHFo60aAB35Viy5rOrjoEeohI7dmt3JDuIFpRj0VHsRANbu_1U3I9g3sSr6q0WiT2ckDIsI_pfks9hKBy0VPZcoiGBOuGjpfAb73CMmICJbeGIVjNVnGcnGBJJZ1KoRprUqe7Gf-mXN_t7SWuTM551Z90P9Hp4qeRgGBsgA4gaM4lPrvuuLBTnXtlLoSPLexnl71aoYgHLct9xx0U1zjk4MZkpSVWn--lK3xZPA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📱 Fetching VAPI phone numbers for organization: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Checking organizations table for VAPI credentials...
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🔍 Making VAPI API call to list phone numbers...
+🔑 Using API key: da8956d4-0...
+📍 API Base URL: https://api.vapi.ai
+🔐 Auth Header: Bearer ***
+✅ VAPI phone numbers API response: {
+  status: 200,
+  dataLength: 3,
+  dataPreview: '3 phone numbers',
+  rawData: [
+    {
+      id: '97147f92-cfe3-43ca-a50d-8249614efb88',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      assistantId: '2ba8bb47-0a31-4c23-972c-7799fc0e5ac3',
+      number: '+14056973432',
+      createdAt: '2025-05-31T15:47:07.036Z',
+      updatedAt: '2025-05-31T15:52:45.579Z',
+      name: 'Unlabeled',
+      provider: 'vapi',
+      status: 'active',
+      providerResourceId: '11f30a77-fb0e-4257-8883-e2db421d3b94'
+    },
+    {
+      id: 'd49a7d01-7caa-4421-b634-e8057494913d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      assistantId: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+      number: '+447482792343',
+      createdAt: '2025-05-31T15:40:27.259Z',
+      updatedAt: '2025-07-07T10:56:51.899Z',
+      twilioAccountSid: 'AC844935e26d19f7a265c4de709d397248',
+      name: '001',
+      provider: 'twilio',
+      status: 'active',
+      smsEnabled: true
+    },
+    {
+      id: 'd4030c42-1d04-4903-8cf8-e82b777a7dab',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      assistantId: 'acee9f38-2352-435e-ac84-d52fe83883a8',
+      number: '+16315288009',
+      createdAt: '2025-02-10T08:24:51.898Z',
+      updatedAt: '2025-04-15T11:37:01.855Z',
+      name: 'Unlabeled',
+      provider: 'vapi',
+      fallbackDestination: [Object]
+    }
+  ]
+}
+✅ Retrieved 3 phone numbers from VAPI
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🚀 Creating VAPI outbound campaign: TST001
+🔄 Checking organizations table for VAPI credentials...
+Error fetching VAPI settings: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🚀 Creating VAPI outbound campaign: TST001
+✅ Using real VAPI integration
+🔍 Making VAPI API call to list assistants...
+🔑 Using API key: da8956d4-0...
+📍 API Base URL: https://api.vapi.ai
+🔐 Auth Header: Bearer ***
+✅ VAPI assistants API response: {
+  status: 200,
+  dataLength: 11,
+  dataPreview: '11 assistants',
+  rawData: [
+    {
+      id: '8ccc374f-bc7e-4c31-9a26-11c92542c1cb',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Real-time Analysis Assistant',
+      voice: [Object],
+      createdAt: '2025-08-01T04:26:52.034Z',
+      updatedAt: '2025-08-01T04:26:52.034Z',
+      model: [Object],
+      firstMessage: "Hello! I'm your real-time conversation analysis assistant. I can analyze sentiment, detect emotions, and provide live insights during our conversation. How can I help you test these capabilities?",
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '465673b3-7064-4cb7-84a7-0647628eaf92',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      createdAt: '2025-08-01T03:41:10.693Z',
+      updatedAt: '2025-08-01T03:41:10.693Z',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Emerald Green Energy Demo',
+      voice: [Object],
+      createdAt: '2025-07-07T10:46:58.019Z',
+      updatedAt: '2025-07-30T17:57:07.202Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4646305f-829a-49fb-8dcc-a0cba2ad707d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:33:44.035Z',
+      updatedAt: '2025-06-26T11:34:15.288Z',
+      model: [Object],
+      firstMessage: 'Hello.',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'c39cd41d-4523-4c6c-bba3-be25f937021a',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:29:53.836Z',
+      updatedAt: '2025-06-26T11:30:54.809Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '724fac0a-f43c-4f96-8a57-c0f164c4a60f',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Marcus - Solar Energy Consultant',
+      voice: [Object],
+      createdAt: '2025-06-26T11:23:40.628Z',
+      updatedAt: '2025-06-26T12:01:17.013Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      backgroundSound: 'office',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'a31a30ac-6aa5-416d-8e21-28f2fe45001d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Watt Utilities Agent',
+      voice: [Object],
+      createdAt: '2025-06-02T07:22:47.691Z',
+      updatedAt: '2025-06-02T07:23:16.561Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'fc7afcac-972d-4e6c-b791-6d2577820ae9',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Artificial Media - Website',
+      voice: [Object],
+      createdAt: '2025-05-30T19:18:37.010Z',
+      updatedAt: '2025-06-02T14:43:28.144Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '2ba8bb47-0a31-4c23-972c-7799fc0e5ac3',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Gogo Utilities Agent ',
+      voice: [Object],
+      createdAt: '2025-05-30T11:23:12.285Z',
+      updatedAt: '2025-06-02T08:59:15.071Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'ac97d579-83ba-4bca-9da2-6be7fd914871',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Liz - Scottish Road Accident Claims',
+      voice: [Object],
+      createdAt: '2025-04-15T09:54:23.439Z',
+      updatedAt: '2025-04-15T12:23:32.401Z',
+      model: [Object],
+      firstMessage: 'Hello, this is Morgan from GrowthPartners. We help businesses improve their operational efficiency through custom software solutions. Do you have a few minutes to chat about how we might be able to help your business?',
+      voicemailMessage: "Hello, this is Morgan from GrowthPartners. I'm calling to discuss how our solutions might help your business operations. I'll try reaching you again, or feel free to call us back at your convenience.",
+      endCallMessage: 'Thank you for taking the time to discuss your needs with me today. Our team will be in touch with more information soon. Have a great day!',
+      transcriber: [Object],
+      clientMessages: [Array],
+      serverMessages: [Array],
+      hipaaEnabled: false,
+      backchannelingEnabled: false,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4d986f9e-9e32-4768-ac5c-1d82ba96857b',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'RTA Agent (Copy)',
+      voice: [Object],
+      createdAt: '2025-03-10T14:00:09.772Z',
+      updatedAt: '2025-03-17T11:25:37.729Z',
+      model: [Object],
+      firstMessage: 'Hello, Would it be possible to speak to Sean please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: false,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      compliancePlan: [Object],
+      isServerUrlSecretSet: false
+    }
+  ]
+}
+🆔 Generated unique Apex ID: apex02865
+✅ Campaign created successfully: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+📤 Uploading leads from CSV to campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+📝 Parsed lead 1: Sean  - 447526126716
+📊 Processing 1 leads for campaign 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+✅ Successfully uploaded 1 leads
+📤 Uploaded 1 leads from CSV
+🚀 Auto-starting campaign with sendTiming=now...
+▶️ Starting VAPI campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+✅ Campaign started with 1 leads
+🔄 Starting to process campaign calls for: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+📋 Campaign config: {
+  assistant_id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+  phone_number_id: 'd49a7d01-7caa-4421-b634-e8057494913d'
+}
+📊 Concurrency: 0/10 active calls, 10 slots available
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+📊 Found 1 pending leads for campaign 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🚀 Processing 1 leads with max 10 concurrent calls...
+📞 Processing lead: Sean  - +447526126716
+📞 Making call to Sean  at +447526126716
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+▶️ Starting campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Checking organizations table for VAPI credentials...
+📱 Formatted phone number: "+447526126716" → "+447526126716"
+🚀 VAPI phone number: "+447526126716"
+🚀 VAPI call request: {
+  "assistantId": "b6c626b2-d159-42f3-a8cd-cad8d0f7536c",
+  "phoneNumberId": "d49a7d01-7caa-4421-b634-e8057494913d",
+  "customer": {
+    "number": "+447526126716",
+    "name": "Sean"
+  }
+}
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+▶️ Starting VAPI campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+✅ Campaign started with 1 leads
+🔄 Starting to process campaign calls for: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+📋 Campaign config: {
+  assistant_id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+  phone_number_id: 'd49a7d01-7caa-4421-b634-e8057494913d'
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+✅ VAPI call created successfully: 65f4c398-a589-498b-b2d7-9b8f9464eb4b
+📞 VAPI response: {
+  "id": "65f4c398-a589-498b-b2d7-9b8f9464eb4b",
+  "assistantId": "b6c626b2-d159-42f3-a8cd-cad8d0f7536c",
+  "phoneNumberId": "d49a7d01-7caa-4421-b634-e8057494913d",
+  "type": "outboundPhoneCall",
+  "createdAt": "2025-08-01T13:06:15.184Z",
+  "updatedAt": "2025-08-01T13:06:15.184Z",
+  "orgId": "f5a0ab25-fe82-437b-a25d-b0b373b3b81f",
+  "cost": 0,
+  "customer": {
+    "name": "Sean",
+    "number": "+447526126716"
+  },
+  "status": "queued",
+  "phoneCallProvider": "twilio",
+  "phoneCallProviderId": "CA3b0d9b0d3a01fa823c07ebfe9b7ad8bb",
+  "phoneCallTransport": "pstn",
+  "monitor": {
+    "listenUrl": "wss://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/65f4c398-a589-498b-b2d7-9b8f9464eb4b/listen",
+    "controlUrl": "https://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/65f4c398-a589-498b-b2d7-9b8f9464eb4b/control"
+  },
+  "transport": {
+    "callSid": "CA3b0d9b0d3a01fa823c07ebfe9b7ad8bb",
+    "provider": "twilio",
+    "accountSid": "AC844935e26d19f7a265c4de709d397248"
+  }
+}
+📊 Concurrency: 0/10 active calls, 10 slots available
+📊 Found 1 pending leads for campaign 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🚀 Processing 1 leads with max 10 concurrent calls...
+📞 Processing lead: Sean  - +447526126716
+📞 Making call to Sean  at +447526126716
+⏭️ Skipping duplicate call for lead 39277271-1471-4dc5-9039-e6053139e9da - recent call exists (54aebd4e-7719-4fe9-9c39-abf1cf952b17)
+✅ Finished processing batch: 0/1 calls initiated successfully
+✅ Call initiated: 65f4c398-a589-498b-b2d7-9b8f9464eb4b
+✅ Finished processing batch: 1/1 calls initiated successfully
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM2MTQsImZ2YSI6WzIzNjcsLTFdLCJpYXQiOjE3NTQwNTM1NTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNTQ0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.QE47xHaffOKs-IAQ08sW1ZS1aZX3wdhvdciQBwOOp-5ppuX_9vb8o-f2UOwrVnzBRPANrRINr6sHYs3NOLzqg_Mw7PoZ3n0gsWBJe-c--7nXivnQuOseynDoWhY8sCM7yzljkPwotipQAbxy1jU7t4KSGEpVD9sXa6J_F_K4poR4nK7mm_55Rnp92TOlvx8SC-8oWBiKtH3sb5Np_S71JYxE_zbkp8-ZWHdZG248t45EGhHqs3uNdFkq7wQQZgi-GXeeYOWWxF3NQA7DsMYvR8xz2h_IgU44N6o7C5JWrJHWoz6Z8OWOfg2vuPHvJ7CnYtDiizY_DaRp-SvQ_8v3uA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDEsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDEsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMxLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.qiNCqSvcsvurcn8ijWz_3tJdpWffJpRigjTdVsbcKonNDyqp2V4RASAA2vXMVXyWp8UUqzX4kT2XYhsy1wxS1g0WKSLHuB7q5xxThgW8yURPA2fwKmh_benkuNw9i0BHrX7My9Yz-6diZp5858PKvCed9jPyUZO-UGD03sF0Ce_wIwEm4n5-sEKaY83k1wwJazfoB0Luq16aD5raufJb4b3EKL6OjjxeDfCzcvFCbsKbis6O-_2kxq_IOfy69DedYYXyUapSiqVboK8YR45dLz-_yYFUe3SpXsmNjlS8z5V0TvBYWqX8-pI64h9nkn7D8aPRzXLeFj_55frBAwW9Dg
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDEsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDEsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMxLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.qiNCqSvcsvurcn8ijWz_3tJdpWffJpRigjTdVsbcKonNDyqp2V4RASAA2vXMVXyWp8UUqzX4kT2XYhsy1wxS1g0WKSLHuB7q5xxThgW8yURPA2fwKmh_benkuNw9i0BHrX7My9Yz-6diZp5858PKvCed9jPyUZO-UGD03sF0Ce_wIwEm4n5-sEKaY83k1wwJazfoB0Luq16aD5raufJb4b3EKL6OjjxeDfCzcvFCbsKbis6O-_2kxq_IOfy69DedYYXyUapSiqVboK8YR45dLz-_yYFUe3SpXsmNjlS8z5V0TvBYWqX8-pI64h9nkn7D8aPRzXLeFj_55frBAwW9Dg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📞 Fetching calls for campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📊 Fetching campaign dashboard: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Checking organizations table for VAPI credentials...
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+❌ Error fetching campaign calls: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'calls with leads',
+      relationship: 'leads_call_id_fkey using calls(id) and leads(call_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'calls with leads',
+      relationship: 'calls_lead_id_fkey using calls(lead_id) and leads(id)'
+    }
+  ],
+  hint: "Try changing 'leads' to one of the following: 'leads!leads_call_id_fkey', 'leads!calls_lead_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'calls' and 'leads'"
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDEsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDEsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMxLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.qiNCqSvcsvurcn8ijWz_3tJdpWffJpRigjTdVsbcKonNDyqp2V4RASAA2vXMVXyWp8UUqzX4kT2XYhsy1wxS1g0WKSLHuB7q5xxThgW8yURPA2fwKmh_benkuNw9i0BHrX7My9Yz-6diZp5858PKvCed9jPyUZO-UGD03sF0Ce_wIwEm4n5-sEKaY83k1wwJazfoB0Luq16aD5raufJb4b3EKL6OjjxeDfCzcvFCbsKbis6O-_2kxq_IOfy69DedYYXyUapSiqVboK8YR45dLz-_yYFUe3SpXsmNjlS8z5V0TvBYWqX8-pI64h9nkn7D8aPRzXLeFj_55frBAwW9Dg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📞 Fetching calls for campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+❌ Error fetching campaign calls: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'calls with leads',
+      relationship: 'leads_call_id_fkey using calls(id) and leads(call_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'calls with leads',
+      relationship: 'calls_lead_id_fkey using calls(lead_id) and leads(id)'
+    }
+  ],
+  hint: "Try changing 'leads' to one of the following: 'leads!leads_call_id_fkey', 'leads!calls_lead_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'calls' and 'leads'"
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDEsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDEsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMxLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.qiNCqSvcsvurcn8ijWz_3tJdpWffJpRigjTdVsbcKonNDyqp2V4RASAA2vXMVXyWp8UUqzX4kT2XYhsy1wxS1g0WKSLHuB7q5xxThgW8yURPA2fwKmh_benkuNw9i0BHrX7My9Yz-6diZp5858PKvCed9jPyUZO-UGD03sF0Ce_wIwEm4n5-sEKaY83k1wwJazfoB0Luq16aD5raufJb4b3EKL6OjjxeDfCzcvFCbsKbis6O-_2kxq_IOfy69DedYYXyUapSiqVboK8YR45dLz-_yYFUe3SpXsmNjlS8z5V0TvBYWqX8-pI64h9nkn7D8aPRzXLeFj_55frBAwW9Dg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📊 Fetching campaign dashboard: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Checking organizations table for VAPI credentials...
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📊 Fetching campaign dashboard: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Checking organizations table for VAPI credentials...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📞 Fetching calls for campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+❌ Error fetching campaign calls: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'calls with leads',
+      relationship: 'leads_call_id_fkey using calls(id) and leads(call_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'calls with leads',
+      relationship: 'calls_lead_id_fkey using calls(lead_id) and leads(id)'
+    }
+  ],
+  hint: "Try changing 'leads' to one of the following: 'leads!leads_call_id_fkey', 'leads!calls_lead_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'calls' and 'leads'"
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📞 Fetching calls for campaign: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTM4MDAsImZ2YSI6WzIzNzEsLTFdLCJpYXQiOjE3NTQwNTM3NDAsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDUzNzMwLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.gUbky0-n3fenNvfVnlJ79ye6ecJCmezwCrPJRn_8ubIWMbRJXbF29zBu8aZz4p9AHP4IJbIAwy7qQ_d7Zxf0iUkYOTdZaQEYkwHwKUgh5zK21mEHEXtlPkHhepx0ap-3qHxKZk01mizDPXMLWDBTwhZvXyN9M4TlVTB40WlOQEonM73zOdnAJrqLJHWPvtLh7J4WNfX1Rf-7XSN0c0iA67IkdArN2Rpdl3lXDGF6K7-sa2jxI59_xmDLkNbNcnOfWlsQmeLIc8-rOdM8hpZg1BuMV9lnnLL5wRkCzYT_6onld3WLAsyUAPZ7rHwOOXSQyZJR5-SPoFagzkiVdBUwGw
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📊 Fetching campaign dashboard: 1c382f0b-596b-45b2-8292-ffa9ae65bd83
+🔄 Checking organizations table for VAPI credentials...
+❌ Error fetching campaign calls: {
+  code: 'PGRST201',
+  details: [
+    {
+      cardinality: 'one-to-many',
+      embedding: 'calls with leads',
+      relationship: 'leads_call_id_fkey using calls(id) and leads(call_id)'
+    },
+    {
+      cardinality: 'many-to-one',
+      embedding: 'calls with leads',
+      relationship: 'calls_lead_id_fkey using calls(lead_id) and leads(id)'
+    }
+  ],
+  hint: "Try changing 'leads' to one of the following: 'leads!leads_call_id_fkey', 'leads!calls_lead_id_fkey'. Find the desired relationship in the 'details' key.",
+  message: "Could not embed because more than one relationship was found for 'calls' and 'leads'"
+}
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🧹 Found 1 stuck calls to clean up
+✅ Cleaned up stuck call 54aebd4e-7719-4fe9-9c39-abf1cf952b17 (failed)
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+Error fetching VAPI settings: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching VAPI settings: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔍 Fetching VAPI assistants for organization: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Checking organizations table for VAPI credentials...
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🔍 Making VAPI API call to list assistants...
+🔑 Using API key: da8956d4-0...
+📍 API Base URL: https://api.vapi.ai
+🔐 Auth Header: Bearer ***
+✅ VAPI assistants API response: {
+  status: 200,
+  dataLength: 11,
+  dataPreview: '11 assistants',
+  rawData: [
+    {
+      id: '8ccc374f-bc7e-4c31-9a26-11c92542c1cb',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Real-time Analysis Assistant',
+      voice: [Object],
+      createdAt: '2025-08-01T04:26:52.034Z',
+      updatedAt: '2025-08-01T04:26:52.034Z',
+      model: [Object],
+      firstMessage: "Hello! I'm your real-time conversation analysis assistant. I can analyze sentiment, detect emotions, and provide live insights during our conversation. How can I help you test these capabilities?",
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '465673b3-7064-4cb7-84a7-0647628eaf92',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      createdAt: '2025-08-01T03:41:10.693Z',
+      updatedAt: '2025-08-01T03:41:10.693Z',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Emerald Green Energy Demo',
+      voice: [Object],
+      createdAt: '2025-07-07T10:46:58.019Z',
+      updatedAt: '2025-07-30T17:57:07.202Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4646305f-829a-49fb-8dcc-a0cba2ad707d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:33:44.035Z',
+      updatedAt: '2025-06-26T11:34:15.288Z',
+      model: [Object],
+      firstMessage: 'Hello.',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'c39cd41d-4523-4c6c-bba3-be25f937021a',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:29:53.836Z',
+      updatedAt: '2025-06-26T11:30:54.809Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '724fac0a-f43c-4f96-8a57-c0f164c4a60f',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Marcus - Solar Energy Consultant',
+      voice: [Object],
+      createdAt: '2025-06-26T11:23:40.628Z',
+      updatedAt: '2025-06-26T12:01:17.013Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      backgroundSound: 'office',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'a31a30ac-6aa5-416d-8e21-28f2fe45001d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Watt Utilities Agent',
+      voice: [Object],
+      createdAt: '2025-06-02T07:22:47.691Z',
+      updatedAt: '2025-06-02T07:23:16.561Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'fc7afcac-972d-4e6c-b791-6d2577820ae9',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Artificial Media - Website',
+      voice: [Object],
+      createdAt: '2025-05-30T19:18:37.010Z',
+      updatedAt: '2025-06-02T14:43:28.144Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '2ba8bb47-0a31-4c23-972c-7799fc0e5ac3',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Gogo Utilities Agent ',
+      voice: [Object],
+      createdAt: '2025-05-30T11:23:12.285Z',
+      updatedAt: '2025-06-02T08:59:15.071Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'ac97d579-83ba-4bca-9da2-6be7fd914871',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Liz - Scottish Road Accident Claims',
+      voice: [Object],
+      createdAt: '2025-04-15T09:54:23.439Z',
+      updatedAt: '2025-04-15T12:23:32.401Z',
+      model: [Object],
+      firstMessage: 'Hello, this is Morgan from GrowthPartners. We help businesses improve their operational efficiency through custom software solutions. Do you have a few minutes to chat about how we might be able to help your business?',
+      voicemailMessage: "Hello, this is Morgan from GrowthPartners. I'm calling to discuss how our solutions might help your business operations. I'll try reaching you again, or feel free to call us back at your convenience.",
+      endCallMessage: 'Thank you for taking the time to discuss your needs with me today. Our team will be in touch with more information soon. Have a great day!',
+      transcriber: [Object],
+      clientMessages: [Array],
+      serverMessages: [Array],
+      hipaaEnabled: false,
+      backchannelingEnabled: false,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4d986f9e-9e32-4768-ac5c-1d82ba96857b',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'RTA Agent (Copy)',
+      voice: [Object],
+      createdAt: '2025-03-10T14:00:09.772Z',
+      updatedAt: '2025-03-17T11:25:37.729Z',
+      model: [Object],
+      firstMessage: 'Hello, Would it be possible to speak to Sean please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: false,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      compliancePlan: [Object],
+      isServerUrlSecretSet: false
+    }
+  ]
+}
+✅ Retrieved 11 assistants from VAPI
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MjIsImZ2YSI6WzI0MDQsLTFdLCJpYXQiOjE3NTQwNTU3NjIsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzUyLCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.ibjCtBAQvYB1JxLn64p-kGI2YEipma_0Dxd9vfx7rKg97nQkEnvn-HNZV0Ojj63JW2keaS2lL9drnNk-dUJSgJvCCFBnFW_GDnJDDVst2JrbJW4DzepHN12nGH3ziYuNx41iBHh_lnvUu3dfdnPTbspO2yPJBDgZ53kX7HOb7SGxI-iThztNtTdMY8sRaDv7DsZ4S3i8rAcDk_sVAb9vpPHSviL8lRyMe7s6WRglhyog6wA_y2bTiXo-DwEX3oEFi1lDEmbsXB98yrkEyISSw6Oi0WIfQm2YZMHVmzfTm-71dUit2drHsch5KrYTVoPx1_-WAKry0-SAVqGTPbPXRA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📱 Fetching VAPI phone numbers for organization: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Checking organizations table for VAPI credentials...
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🔍 Making VAPI API call to list phone numbers...
+🔑 Using API key: da8956d4-0...
+📍 API Base URL: https://api.vapi.ai
+🔐 Auth Header: Bearer ***
+✅ VAPI phone numbers API response: {
+  status: 200,
+  dataLength: 3,
+  dataPreview: '3 phone numbers',
+  rawData: [
+    {
+      id: '97147f92-cfe3-43ca-a50d-8249614efb88',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      assistantId: '2ba8bb47-0a31-4c23-972c-7799fc0e5ac3',
+      number: '+14056973432',
+      createdAt: '2025-05-31T15:47:07.036Z',
+      updatedAt: '2025-05-31T15:52:45.579Z',
+      name: 'Unlabeled',
+      provider: 'vapi',
+      status: 'active',
+      providerResourceId: '11f30a77-fb0e-4257-8883-e2db421d3b94'
+    },
+    {
+      id: 'd49a7d01-7caa-4421-b634-e8057494913d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      assistantId: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+      number: '+447482792343',
+      createdAt: '2025-05-31T15:40:27.259Z',
+      updatedAt: '2025-07-07T10:56:51.899Z',
+      twilioAccountSid: 'AC844935e26d19f7a265c4de709d397248',
+      name: '001',
+      provider: 'twilio',
+      status: 'active',
+      smsEnabled: true
+    },
+    {
+      id: 'd4030c42-1d04-4903-8cf8-e82b777a7dab',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      assistantId: 'acee9f38-2352-435e-ac84-d52fe83883a8',
+      number: '+16315288009',
+      createdAt: '2025-02-10T08:24:51.898Z',
+      updatedAt: '2025-04-15T11:37:01.855Z',
+      name: 'Unlabeled',
+      provider: 'vapi',
+      fallbackDestination: [Object]
+    }
+  ]
+}
+✅ Retrieved 3 phone numbers from VAPI
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+Error fetching VAPI settings: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🚀 Creating VAPI outbound campaign: tst002
+🔄 Checking organizations table for VAPI credentials...
+Error fetching setting: {
+  code: '42703',
+  details: null,
+  hint: null,
+  message: 'column organization_settings.key does not exist'
+}
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+🚀 Creating VAPI outbound campaign: tst002
+✅ Using real VAPI integration
+🔍 Making VAPI API call to list assistants...
+🔑 Using API key: da8956d4-0...
+📍 API Base URL: https://api.vapi.ai
+🔐 Auth Header: Bearer ***
+✅ VAPI assistants API response: {
+  status: 200,
+  dataLength: 11,
+  dataPreview: '11 assistants',
+  rawData: [
+    {
+      id: '8ccc374f-bc7e-4c31-9a26-11c92542c1cb',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Real-time Analysis Assistant',
+      voice: [Object],
+      createdAt: '2025-08-01T04:26:52.034Z',
+      updatedAt: '2025-08-01T04:26:52.034Z',
+      model: [Object],
+      firstMessage: "Hello! I'm your real-time conversation analysis assistant. I can analyze sentiment, detect emotions, and provide live insights during our conversation. How can I help you test these capabilities?",
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '465673b3-7064-4cb7-84a7-0647628eaf92',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      createdAt: '2025-08-01T03:41:10.693Z',
+      updatedAt: '2025-08-01T03:41:10.693Z',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Emerald Green Energy Demo',
+      voice: [Object],
+      createdAt: '2025-07-07T10:46:58.019Z',
+      updatedAt: '2025-07-30T17:57:07.202Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4646305f-829a-49fb-8dcc-a0cba2ad707d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:33:44.035Z',
+      updatedAt: '2025-06-26T11:34:15.288Z',
+      model: [Object],
+      firstMessage: 'Hello.',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'c39cd41d-4523-4c6c-bba3-be25f937021a',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Sofia - Insurance Review Specialist',
+      voice: [Object],
+      createdAt: '2025-06-26T11:29:53.836Z',
+      updatedAt: '2025-06-26T11:30:54.809Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '724fac0a-f43c-4f96-8a57-c0f164c4a60f',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Marcus - Solar Energy Consultant',
+      voice: [Object],
+      createdAt: '2025-06-26T11:23:40.628Z',
+      updatedAt: '2025-06-26T12:01:17.013Z',
+      model: [Object],
+      firstMessage: '',
+      voicemailMessage: "Please call back when you're available.",
+      endCallMessage: 'Goodbye.',
+      transcriber: [Object],
+      backgroundSound: 'office',
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'a31a30ac-6aa5-416d-8e21-28f2fe45001d',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Watt Utilities Agent',
+      voice: [Object],
+      createdAt: '2025-06-02T07:22:47.691Z',
+      updatedAt: '2025-06-02T07:23:16.561Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'fc7afcac-972d-4e6c-b791-6d2577820ae9',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Artificial Media - Website',
+      voice: [Object],
+      createdAt: '2025-05-30T19:18:37.010Z',
+      updatedAt: '2025-06-02T14:43:28.144Z',
+      model: [Object],
+      firstMessage: '',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '2ba8bb47-0a31-4c23-972c-7799fc0e5ac3',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Gogo Utilities Agent ',
+      voice: [Object],
+      createdAt: '2025-05-30T11:23:12.285Z',
+      updatedAt: '2025-06-02T08:59:15.071Z',
+      model: [Object],
+      firstMessage: 'Hello, is it possible to speak to the person responsible for paying the energy bills for your business please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: true,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      firstMessageMode: 'assistant-waits-for-user',
+      analysisPlan: [Object],
+      backgroundDenoisingEnabled: false,
+      artifactPlan: [Object],
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      server: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: 'ac97d579-83ba-4bca-9da2-6be7fd914871',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'Liz - Scottish Road Accident Claims',
+      voice: [Object],
+      createdAt: '2025-04-15T09:54:23.439Z',
+      updatedAt: '2025-04-15T12:23:32.401Z',
+      model: [Object],
+      firstMessage: 'Hello, this is Morgan from GrowthPartners. We help businesses improve their operational efficiency through custom software solutions. Do you have a few minutes to chat about how we might be able to help your business?',
+      voicemailMessage: "Hello, this is Morgan from GrowthPartners. I'm calling to discuss how our solutions might help your business operations. I'll try reaching you again, or feel free to call us back at your convenience.",
+      endCallMessage: 'Thank you for taking the time to discuss your needs with me today. Our team will be in touch with more information soon. Have a great day!',
+      transcriber: [Object],
+      clientMessages: [Array],
+      serverMessages: [Array],
+      hipaaEnabled: false,
+      backchannelingEnabled: false,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      isServerUrlSecretSet: false
+    },
+    {
+      id: '4d986f9e-9e32-4768-ac5c-1d82ba96857b',
+      orgId: 'f5a0ab25-fe82-437b-a25d-b0b373b3b81f',
+      name: 'RTA Agent (Copy)',
+      voice: [Object],
+      createdAt: '2025-03-10T14:00:09.772Z',
+      updatedAt: '2025-03-17T11:25:37.729Z',
+      model: [Object],
+      firstMessage: 'Hello, Would it be possible to speak to Sean please?',
+      endCallFunctionEnabled: true,
+      transcriber: [Object],
+      silenceTimeoutSeconds: 30,
+      clientMessages: [Array],
+      serverMessages: [Array],
+      dialKeypadFunctionEnabled: false,
+      hipaaEnabled: false,
+      maxDurationSeconds: 3810,
+      backgroundSound: 'office',
+      backchannelingEnabled: true,
+      backgroundDenoisingEnabled: false,
+      startSpeakingPlan: [Object],
+      stopSpeakingPlan: [Object],
+      compliancePlan: [Object],
+      isServerUrlSecretSet: false
+    }
+  ]
+}
+🆔 Generated unique Apex ID: apex96570
+✅ Campaign created successfully: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+📤 Uploading leads from CSV to campaign: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+📝 Parsed lead 1: Sean  - 447526126716
+📊 Processing 1 leads for campaign 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+✅ Successfully uploaded 1 leads
+📤 Uploaded 1 leads from CSV
+🚀 Auto-starting campaign with sendTiming=now...
+▶️ Starting VAPI campaign: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+✅ Campaign started with 1 leads
+🔄 Starting to process campaign calls for: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+📋 Campaign config: {
+  assistant_id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+  phone_number_id: 'd49a7d01-7caa-4421-b634-e8057494913d'
+}
+📊 Concurrency: 0/10 active calls, 10 slots available
+📊 Found 1 pending leads for campaign 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+🚀 Processing 1 leads with max 10 concurrent calls...
+📞 Processing lead: Sean  - +447526126716
+📞 Making call to Sean  at +447526126716
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+📱 Formatted phone number: "+447526126716" → "+447526126716"
+🚀 VAPI phone number: "+447526126716"
+🚀 VAPI call request: {
+  "assistantId": "b6c626b2-d159-42f3-a8cd-cad8d0f7536c",
+  "phoneNumberId": "d49a7d01-7caa-4421-b634-e8057494913d",
+  "customer": {
+    "number": "+447526126716",
+    "name": "Sean"
+  }
+}
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+▶️ Starting campaign: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+🔄 Checking organizations table for VAPI credentials...
+✅ Found VAPI credentials in organizations.settings.vapi
+🎯 Creating VAPI service with credentials: {
+  hasApiKey: true,
+  apiKeyPreview: 'da8956d4-0...',
+  organizationId: '2566d8c5-2245-4a3c-b539-4cea21a07d9b',
+  source: 'organizations table'
+}
+▶️ Starting VAPI campaign: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+✅ Campaign started with 1 leads
+🔄 Starting to process campaign calls for: 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+✅ VAPI call created successfully: 656aea82-f7c1-43e4-a26a-6f315e42adfe
+📞 VAPI response: {
+  "id": "656aea82-f7c1-43e4-a26a-6f315e42adfe",
+  "assistantId": "b6c626b2-d159-42f3-a8cd-cad8d0f7536c",
+  "phoneNumberId": "d49a7d01-7caa-4421-b634-e8057494913d",
+  "type": "outboundPhoneCall",
+  "createdAt": "2025-08-01T13:43:17.047Z",
+  "updatedAt": "2025-08-01T13:43:17.047Z",
+  "orgId": "f5a0ab25-fe82-437b-a25d-b0b373b3b81f",
+  "cost": 0,
+  "customer": {
+    "name": "Sean",
+    "number": "+447526126716"
+  },
+  "status": "queued",
+  "phoneCallProvider": "twilio",
+  "phoneCallProviderId": "CA3d72b5d4aa0594a7dcc95e1df4f6f6a8",
+  "phoneCallTransport": "pstn",
+  "monitor": {
+    "listenUrl": "wss://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/656aea82-f7c1-43e4-a26a-6f315e42adfe/listen",
+    "controlUrl": "https://phone-call-websocket.aws-us-west-2-backend-production1.vapi.ai/656aea82-f7c1-43e4-a26a-6f315e42adfe/control"
+  },
+  "transport": {
+    "callSid": "CA3d72b5d4aa0594a7dcc95e1df4f6f6a8",
+    "provider": "twilio",
+    "accountSid": "AC844935e26d19f7a265c4de709d397248"
+  }
+}
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+📋 Campaign config: {
+  assistant_id: 'b6c626b2-d159-42f3-a8cd-cad8d0f7536c',
+  phone_number_id: 'd49a7d01-7caa-4421-b634-e8057494913d'
+}
+✅ Call initiated: 656aea82-f7c1-43e4-a26a-6f315e42adfe
+✅ Finished processing batch: 1/1 calls initiated successfully
+📊 Concurrency: 1/10 active calls, 9 slots available
+📊 Found 0 pending leads for campaign 2358c750-e78c-45a4-a3a8-1d3ba49e0006
+⚠️ No pending leads found for processing
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTU4MzgsImZ2YSI6WzI0MDUsLTFdLCJpYXQiOjE3NTQwNTU3NzgsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU1NzY4LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.N5OjU5c8_XNClk433mz-iA5iuXGpYMEIVSzv8H5Zxcywf-xRmuohC65zz-xRXF_JrdXCYaE_wcX0ZKPB8bM5J34qWY1K0JkETguBDqwUAv2HfZBf6EuYnXl8a30siyLX5AwqY4epJYo1hAXMKI4By_2VI59tzkUgVdM_HSQLnzkduwMAjSQGdluOEGbD1pXoWFNmwfTzzAMNkXmtoeWvK28E5Lh5TR4c2Zr8UeQQlOmQWkNIhKmXt4OOZq6I9Vqm1JUrNpnpw1bGNs6YmgdChK2ZIrE7_wNdPMhsD4ljerBVCsVbsIQ3YsZdYwASUWUe_7Fe30S1f6pAHOQob6RmxA
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🧹 Found 1 stuck calls to clean up
+✅ Cleaned up stuck call 4a130c7f-bdfe-49ed-b010-6064c621bfbe (failed)
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTc2NTQsImZ2YSI6WzI0MzUsLTFdLCJpYXQiOjE3NTQwNTc1OTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU3NTg0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.JSQG9Us8QAb4k6VfebXh4ZOFvdNOPhSWlIc1waM-8WozbGofoQOn0B9Yy4x8JddKUudzhEJOE4BpKxweMssxieZPj3t19cSLZWUty0hZd4K3-1FT_kXZbioK2I-VX4ork5Mi54Qe0bOBki5LX8P70vCvzy2jpB5ekzW4l-1KzA4lmMpo7UF_vV5eOBF_TGevljwjUFsB5lokDgsC_BcWP8aLuGzqenCrNjRnz-wNJCUhiVJz25js1oHJxbdgdMnw0EW3RtgQOYeVsHt0G7iNAz2mVEcmskCD3fIh0Ymxqx-PPl7v80cTmV5aJTwpZIySBl2iJc59YEAz5wqCQcPxZg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTc2NTQsImZ2YSI6WzI0MzUsLTFdLCJpYXQiOjE3NTQwNTc1OTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU3NTg0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.JSQG9Us8QAb4k6VfebXh4ZOFvdNOPhSWlIc1waM-8WozbGofoQOn0B9Yy4x8JddKUudzhEJOE4BpKxweMssxieZPj3t19cSLZWUty0hZd4K3-1FT_kXZbioK2I-VX4ork5Mi54Qe0bOBki5LX8P70vCvzy2jpB5ekzW4l-1KzA4lmMpo7UF_vV5eOBF_TGevljwjUFsB5lokDgsC_BcWP8aLuGzqenCrNjRnz-wNJCUhiVJz25js1oHJxbdgdMnw0EW3RtgQOYeVsHt0G7iNAz2mVEcmskCD3fIh0Ymxqx-PPl7v80cTmV5aJTwpZIySBl2iJc59YEAz5wqCQcPxZg
+🔐 Attempting Clerk authentication...
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTc2NTQsImZ2YSI6WzI0MzUsLTFdLCJpYXQiOjE3NTQwNTc1OTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU3NTg0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.JSQG9Us8QAb4k6VfebXh4ZOFvdNOPhSWlIc1waM-8WozbGofoQOn0B9Yy4x8JddKUudzhEJOE4BpKxweMssxieZPj3t19cSLZWUty0hZd4K3-1FT_kXZbioK2I-VX4ork5Mi54Qe0bOBki5LX8P70vCvzy2jpB5ekzW4l-1KzA4lmMpo7UF_vV5eOBF_TGevljwjUFsB5lokDgsC_BcWP8aLuGzqenCrNjRnz-wNJCUhiVJz25js1oHJxbdgdMnw0EW3RtgQOYeVsHt0G7iNAz2mVEcmskCD3fIh0Ymxqx-PPl7v80cTmV5aJTwpZIySBl2iJc59YEAz5wqCQcPxZg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTc2NTQsImZ2YSI6WzI0MzUsLTFdLCJpYXQiOjE3NTQwNTc1OTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU3NTg0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.JSQG9Us8QAb4k6VfebXh4ZOFvdNOPhSWlIc1waM-8WozbGofoQOn0B9Yy4x8JddKUudzhEJOE4BpKxweMssxieZPj3t19cSLZWUty0hZd4K3-1FT_kXZbioK2I-VX4ork5Mi54Qe0bOBki5LX8P70vCvzy2jpB5ekzW4l-1KzA4lmMpo7UF_vV5eOBF_TGevljwjUFsB5lokDgsC_BcWP8aLuGzqenCrNjRnz-wNJCUhiVJz25js1oHJxbdgdMnw0EW3RtgQOYeVsHt0G7iNAz2mVEcmskCD3fIh0Ymxqx-PPl7v80cTmV5aJTwpZIySBl2iJc59YEAz5wqCQcPxZg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTc2NTQsImZ2YSI6WzI0MzUsLTFdLCJpYXQiOjE3NTQwNTc1OTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU3NTg0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.JSQG9Us8QAb4k6VfebXh4ZOFvdNOPhSWlIc1waM-8WozbGofoQOn0B9Yy4x8JddKUudzhEJOE4BpKxweMssxieZPj3t19cSLZWUty0hZd4K3-1FT_kXZbioK2I-VX4ork5Mi54Qe0bOBki5LX8P70vCvzy2jpB5ekzW4l-1KzA4lmMpo7UF_vV5eOBF_TGevljwjUFsB5lokDgsC_BcWP8aLuGzqenCrNjRnz-wNJCUhiVJz25js1oHJxbdgdMnw0EW3RtgQOYeVsHt0G7iNAz2mVEcmskCD3fIh0Ymxqx-PPl7v80cTmV5aJTwpZIySBl2iJc59YEAz5wqCQcPxZg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b
+🔄 Development mode is ENABLED
+🔄 Received token: eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yektibGd6NHpUU0ViNmZRcXA1NlBBS2ZEWFgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjU1MjIiLCJleHAiOjE3NTQwNTc2NTQsImZ2YSI6WzI0MzUsLTFdLCJpYXQiOjE3NTQwNTc1OTQsImlzcyI6Imh0dHBzOi8vdW5pdGVkLWNob3ctMTMuY2xlcmsuYWNjb3VudHMuZGV2IiwibmJmIjoxNzU0MDU3NTg0LCJzaWQiOiJzZXNzXzMwYzBJY2ZBQmFkS21GT1ZMWVpMdXJTUmluViIsInN1YiI6InVzZXJfMzBZb3dKN2Q5a1RNVGZ5elVaRlZrRnY3dENaIiwidiI6Mn0.JSQG9Us8QAb4k6VfebXh4ZOFvdNOPhSWlIc1waM-8WozbGofoQOn0B9Yy4x8JddKUudzhEJOE4BpKxweMssxieZPj3t19cSLZWUty0hZd4K3-1FT_kXZbioK2I-VX4ork5Mi54Qe0bOBki5LX8P70vCvzy2jpB5ekzW4l-1KzA4lmMpo7UF_vV5eOBF_TGevljwjUFsB5lokDgsC_BcWP8aLuGzqenCrNjRnz-wNJCUhiVJz25js1oHJxbdgdMnw0EW3RtgQOYeVsHt0G7iNAz2mVEcmskCD3fIh0Ymxqx-PPl7v80cTmV5aJTwpZIySBl2iJc59YEAz5wqCQcPxZg
+🔐 Attempting Clerk authentication...
+🔑 Clerk authentication successful for user: seanwentz99@gmail.com
+📋 User organization_id: 2566d8c5-2245-4a3c-b539-4cea21a07d9b

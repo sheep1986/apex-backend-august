@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test VAPI Audio Playback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .audio-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #059669;
+        }
+        .error {
+            color: #ef4444;
+            margin-top: 10px;
+        }
+        .success {
+            color: #10b981;
+            margin-top: 10px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test VAPI Audio Playback</h1>
+    
+    <div class="audio-container">
+        <h3>VAPI Recording URL Test</h3>
+        <p>URL: <code id="vapi-url">https://storage.vapi.ai/9cac9284-9cd3-4359-ae7d-30b1aadc337c-1753897677484-3e82733f-b833-493c-b5bb-a279a07ac042-mono.wav</code></p>
+        
+        <audio id="vapi-audio" controls>
+            <source src="https://storage.vapi.ai/9cac9284-9cd3-4359-ae7d-30b1aadc337c-1753897677484-3e82733f-b833-493c-b5bb-a279a07ac042-mono.wav" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="testDirectPlay()">Test Direct Play</button>
+            <button onclick="testWithCORS()">Test with CORS</button>
+            <button onclick="openInNewTab()">Open in New Tab</button>
+            <button onclick="testFetch()">Test Fetch</button>
+        </div>
+        
+        <div id="status" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        const audioUrl = 'https://storage.vapi.ai/9cac9284-9cd3-4359-ae7d-30b1aadc337c-1753897677484-3e82733f-b833-493c-b5bb-a279a07ac042-mono.wav';
+        const statusDiv = document.getElementById('status');
+        
+        function updateStatus(message, isError = false) {
+            statusDiv.innerHTML = `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
+        }
+        
+        function testDirectPlay() {
+            const audio = document.getElementById('vapi-audio');
+            audio.play()
+                .then(() => updateStatus('✅ Direct play successful!'))
+                .catch(err => updateStatus(`❌ Direct play failed: ${err.message}`, true));
+        }
+        
+        function testWithCORS() {
+            const audio = new Audio();
+            audio.crossOrigin = 'anonymous';
+            audio.src = audioUrl;
+            
+            audio.addEventListener('loadstart', () => updateStatus('🔄 Loading with CORS...'));
+            audio.addEventListener('canplay', () => updateStatus('✅ Can play with CORS!'));
+            audio.addEventListener('error', (e) => {
+                updateStatus(`❌ CORS error: ${e.target.error?.message || 'Unknown error'}`, true);
+            });
+            
+            audio.load();
+        }
+        
+        function openInNewTab() {
+            window.open(audioUrl, '_blank');
+            updateStatus('📂 Opened in new tab');
+        }
+        
+        async function testFetch() {
+            updateStatus('🔄 Testing fetch...');
+            try {
+                const response = await fetch(audioUrl, {
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
+                
+                if (response.ok) {
+                    updateStatus(`✅ Fetch successful! Status: ${response.status}, Type: ${response.type}`);
+                } else {
+                    updateStatus(`❌ Fetch failed! Status: ${response.status}`, true);
+                }
+            } catch (err) {
+                updateStatus(`❌ Fetch error: ${err.message}`, true);
+            }
+        }
+        
+        // Test on page load
+        window.addEventListener('load', () => {
+            const audio = document.getElementById('vapi-audio');
+            audio.addEventListener('loadedmetadata', () => {
+                updateStatus(`✅ Audio loaded! Duration: ${audio.duration.toFixed(2)}s`);
+            });
+            audio.addEventListener('error', (e) => {
+                updateStatus(`❌ Audio error: ${e.target.error?.message || 'Unknown error'}`, true);
+            });
+        });
+    </script>
+</body>
+</html>
