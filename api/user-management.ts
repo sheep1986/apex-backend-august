@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import supabase from '../services/supabase-client';
 import * as nodemailer from 'nodemailer';
 import crypto from 'crypto';
-import { AuthenticatedRequest } from '../middleware/auth';
+import { AuthenticatedRequest } from '../middleware/clerk-auth';
 import { Router } from 'express';
 import { authenticateUser } from '../middleware/auth';
 import { authenticateDevUser } from '../middleware/dev-auth';

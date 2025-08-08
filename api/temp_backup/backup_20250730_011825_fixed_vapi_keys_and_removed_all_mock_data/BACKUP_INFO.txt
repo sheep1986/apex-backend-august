@@ -1,0 +1,24 @@
+APEX AI PROJECT BACKUP
+=====================
+
+Backup Created: Wed Jul 30 01:18:25 CEST 2025
+Description: fixed_vapi_keys_and_removed_all_mock_data
+Git Commit: 2306e62ccfc89d11b1f8a37e8bf68d994381dddd
+Git Branch: main
+
+Files Included:
+- Frontend source code (apps/frontend/src/)
+- Package configuration files
+- Backend files (if present)
+- Git configuration
+
+To Restore:
+1. Copy frontend_src/ back to apps/frontend/src/
+2. Copy config files back to project root
+3. Run: npm install or pnpm install
+4. Start development server
+
+Notes:
+- This backup excludes node_modules (run npm/pnpm install after restore)
+- This backup excludes build artifacts
+- Environment files (.env) are excluded for security

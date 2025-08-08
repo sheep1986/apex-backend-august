@@ -5,9 +5,44 @@ import csv from 'csv-parser';
 import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
+// Utility function to generate unique Apex campaign IDs
+async function generateApexCampaignId(organizationId: string): Promise<string> {
+  const maxAttempts = 10;
+  
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    // Generate 5 random digits
+    const numbers = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+    const apexId = `apex${numbers}`;
+    
+    // Check if this ID already exists in the database
+    const { data: existingCampaign, error } = await supabaseService
+      .from('campaigns')
+      .select('id')
+      .eq('organization_id', organizationId)
+      .eq('apex_id', apexId)
+      .single();
+    
+    if (error && error.code === 'PGRST116') {
+      // No existing campaign found - this ID is unique
+      return apexId;
+    }
+    
+    if (error) {
+      console.error('Error checking apex ID uniqueness:', error);
+      throw new Error('Failed to generate unique campaign ID');
+    }
+    
+    // If we reach here, the ID already exists, try again
+    console.log(`📝 Apex ID ${apexId} already exists, generating new one...`);
+  }
+  
+  throw new Error('Failed to generate unique Apex campaign ID after maximum attempts');
+}
+
 // Interface definitions for VAPI outbound campaigns
 export interface VAPIOutboundCampaign {
   id?: string;
+  apexId?: string; // Human-readable ID like apex12345
   organizationId: string;
   name: string;
   description?: string;
@@ -172,35 +207,78 @@ export class VAPIOutboundService {
         };
       }
 
+      // Generate unique Apex campaign ID
+      const apexId = await generateApexCampaignId(this.organizationId);
+      console.log(`🆔 Generated unique Apex ID: ${apexId}`);
+
+      // Extract concurrency and working hours settings
+      const maxConcurrentCalls = campaignData.max_concurrent_calls || 
+                                campaignData.callBehavior?.customConcurrency || 
+                                10; // Default to 10 concurrent calls
+      
+      const workingHours = campaignData.workingHours?.schedule || {
+        monday: { enabled: true, start: '09:00', end: '17:00' },
+        tuesday: { enabled: true, start: '09:00', end: '17:00' },
+        wednesday: { enabled: true, start: '09:00', end: '17:00' },
+        thursday: { enabled: true, start: '09:00', end: '17:00' },
+        friday: { enabled: true, start: '09:00', end: '17:00' },
+        saturday: { enabled: false, start: '09:00', end: '17:00' },
+        sunday: { enabled: false, start: '09:00', end: '17:00' }
+      };
+      
+      const workingDays = Object.keys(workingHours)
+        .map((day, index) => workingHours[day].enabled ? index + 1 : null)
+        .filter(day => day !== null); // [1,2,3,4,5] for Mon-Fri
+      
       // Create campaign in database
+      const campaignRecord: any = {
+        organization_id: this.organizationId,
+        apex_id: apexId,
+        name: campaignData.name,
+        description: campaignData.description,
+        type: 'outbound',
+        status: campaignData.status || 'draft',
+        assistant_id: campaignData.assistantId || 'dev-assistant-001',
+        phone_number_id: campaignData.phoneNumberId || 'dev-phone-001',
+        // Campaign execution settings as proper columns
+        max_concurrent_calls: maxConcurrentCalls,
+        working_hours: JSON.stringify(workingHours), // Store as JSONB
+        working_days: workingDays, // Store as integer array
+        timezone: campaignData.workingHours?.defaultTimezone || 'America/New_York',
+        calls_per_hour: campaignData.callBehavior?.callsPerHour || 20,
+        calls_per_day: campaignData.callBehavior?.callsPerHour ? campaignData.callBehavior.callsPerHour * 8 : 160,
+        // Retry settings
+        max_retry_attempts: campaignData.retryLogic?.maxRetries || 3,
+        retry_delay_hours: campaignData.retryLogic?.retryDelay || 24,
+        retry_outcomes: ['no_answer', 'busy', 'failed'],
+        // Store other settings in the settings field
+        settings: {
+          schedule,
+          phoneNumber: campaignData.phoneNumber,
+          assignedTeam: campaignData.assignedTeam || [],
+          sendTiming: campaignData.sendTiming || 'now',
+          hasVAPICredentials,
+          realVAPIData: hasRealVAPIData,
+          callBehavior: campaignData.callBehavior,
+          workingHoursConfig: campaignData.workingHours,
+          retryLogic: campaignData.retryLogic,
+          teamManagement: campaignData.teamManagement
+        },
+        total_calls: 0,
+        successful_calls: 0,
+        total_duration: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      // Only add created_by if we have a valid user ID
+      if (campaignData.createdBy) {
+        campaignRecord.created_by = campaignData.createdBy;
+      }
+
       const { data: campaign, error } = await supabaseService
         .from('campaigns')
-        .insert([{
-          organization_id: this.organizationId,
-          name: campaignData.name,
-          description: campaignData.description,
-          type: 'outbound',
-          status: campaignData.status || 'draft',
-          assistant_id: campaignData.assistantId || 'dev-assistant-001',
-          phone_number_id: campaignData.phoneNumberId || 'dev-phone-001', 
-          created_by: campaignData.createdBy || '919004cd-19a8-4d10-a501-2bf59a581823', // Use valid UUID as fallback
-          settings: {
-            schedule,
-            phoneNumber: campaignData.phoneNumber,
-            assignedTeam: campaignData.assignedTeam || [],
-            sendTiming: campaignData.sendTiming || 'now',
-            maxRetries: campaignData.maxRetries || 3,
-            retryDelay: campaignData.retryDelay || 24,
-            hasVAPICredentials,
-            realVAPIData: hasRealVAPIData,
-            ...campaignData
-          },
-          total_calls: 0,
-          successful_calls: 0,
-          total_duration: 0,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }])
+        .insert([campaignRecord])
         .select()
         .single();
 
@@ -427,6 +505,48 @@ export class VAPIOutboundService {
         throw new Error('Campaign not found');
       }
 
+      // First, check if we have campaign_contacts that need to be copied to leads
+      const { data: campaignContacts, error: contactsError } = await supabaseService
+        .from('campaign_contacts')
+        .select('*')
+        .eq('campaign_id', campaignId);
+
+      if (!contactsError && campaignContacts && campaignContacts.length > 0) {
+        console.log(`📋 Found ${campaignContacts.length} contacts in campaign_contacts, copying to leads table...`);
+        
+        // Convert campaign_contacts to leads format
+        const leadsToInsert = campaignContacts.map(contact => ({
+          organization_id: this.organizationId,
+          campaign_id: campaignId,
+          first_name: contact.first_name || '',
+          last_name: contact.last_name || '',
+          phone: contact.phone,
+          email: contact.email,
+          company: contact.company,
+          job_title: contact.title,
+          status: 'pending',
+          call_status: 'pending',
+          call_attempts: 0,
+          custom_fields: contact.custom_fields || {},
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }));
+
+        // Insert into leads table
+        const { error: insertError } = await supabaseService
+          .from('leads')
+          .insert(leadsToInsert, { 
+            onConflict: 'organization_id,phone',
+            ignoreDuplicates: false
+          });
+
+        if (insertError) {
+          console.error('❌ Error copying contacts to leads:', insertError);
+        } else {
+          console.log(`✅ Successfully copied ${campaignContacts.length} contacts to leads table`);
+        }
+      }
+
       // Get pending leads for this campaign
       const { data: leads, error: leadsError } = await supabaseService
         .from('leads')
@@ -630,15 +750,51 @@ export class VAPIOutboundService {
     try {
       console.log(`🔄 Starting to process campaign calls for: ${campaignId}`);
       
-      // This would typically be handled by a background job queue
-      // For now, we'll process a few calls to demonstrate functionality
+      // Get campaign settings including concurrency limit
+      const { data: campaign } = await supabaseService
+        .from('campaigns')
+        .select('*, organization:organizations(settings)')
+        .eq('id', campaignId)
+        .single();
+
+      if (!campaign) {
+        throw new Error('Campaign not found');
+      }
+
+      console.log(`📋 Campaign config:`, {
+        assistant_id: campaign.assistant_id,
+        phone_number_id: campaign.phone_number_id
+      });
+
+      // Get concurrency limit from campaign or organization settings
+      const maxConcurrentCalls = campaign.max_concurrent_calls || 
+                                campaign.organization?.settings?.max_concurrent_calls || 
+                                5; // Default to 5 concurrent calls
+
+      // Check current active calls for this campaign
+      const { data: activeCalls } = await supabaseService
+        .from('calls')
+        .select('id')
+        .eq('campaign_id', campaignId)
+        .in('status', ['initiated', 'ringing', 'in-progress']);
+
+      const currentActiveCalls = activeCalls?.length || 0;
+      const availableSlots = Math.max(0, maxConcurrentCalls - currentActiveCalls);
+
+      console.log(`📊 Concurrency: ${currentActiveCalls}/${maxConcurrentCalls} active calls, ${availableSlots} slots available`);
+
+      if (availableSlots === 0) {
+        console.log('⚠️ Max concurrent calls reached, waiting for slots to free up');
+        return;
+      }
       
+      // Get pending leads up to available slots
       const { data: leads } = await supabaseService
         .from('leads')
         .select('*')
         .eq('campaign_id', campaignId)
         .eq('call_status', 'pending')
-        .limit(5);
+        .limit(availableSlots);
 
       console.log(`📊 Found ${leads?.length || 0} pending leads for campaign ${campaignId}`);
 
@@ -647,33 +803,27 @@ export class VAPIOutboundService {
         return;
       }
 
-      const { data: campaign } = await supabaseService
-        .from('campaigns')
-        .select('assistant_id, phone_number_id')
-        .eq('id', campaignId)
-        .single();
-
-      console.log(`📋 Campaign config:`, campaign);
-
-      if (!campaign) {
-        throw new Error('Campaign not found');
-      }
-
-      // Process each lead
-      console.log(`🚀 Processing ${leads.length} leads...`);
-      for (const lead of leads) {
+      // Process leads in parallel up to concurrency limit
+      console.log(`🚀 Processing ${leads.length} leads with max ${maxConcurrentCalls} concurrent calls...`);
+      
+      const callPromises = leads.map(async (lead, index) => {
         try {
-          console.log(`📞 Processing lead: ${lead.first_name} ${lead.last_name} - ${lead.phone}`);
-          await this.makeCall(campaignId, lead, campaign.assistant_id, campaign.phone_number_id);
+          // Add small stagger to prevent overwhelming the system
+          await new Promise(resolve => setTimeout(resolve, index * 500));
           
-          // Add delay between calls (respecting rate limits)
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          console.log(`📞 Processing lead: ${lead.first_name} ${lead.last_name} - ${lead.phone}`);
+          return await this.makeCall(campaignId, lead, campaign.assistant_id, campaign.phone_number_id);
         } catch (error) {
           console.error(`❌ Failed to call lead ${lead.id}:`, error);
+          return { success: false, error: error.message };
         }
-      }
+      });
 
-      console.log(`✅ Finished processing campaign calls for: ${campaignId}`);
+      // Wait for all calls to be initiated
+      const results = await Promise.all(callPromises);
+      
+      const successfulCalls = results.filter(r => r.success !== false).length;
+      console.log(`✅ Finished processing batch: ${successfulCalls}/${leads.length} calls initiated successfully`);
 
     } catch (error) {
       console.error('❌ Error processing campaign calls:', error);
@@ -743,6 +893,36 @@ export class VAPIOutboundService {
     try {
       console.log(`📞 Making call to ${lead.first_name} ${lead.last_name} at ${lead.phone}`);
 
+      // Check for existing calls to prevent duplicates
+      const { data: existingCalls, error: checkError } = await supabaseService
+        .from('calls')
+        .select('id, status, created_at')
+        .eq('campaign_id', campaignId)
+        .eq('lead_id', lead.id)
+        .in('status', ['initiated', 'ringing', 'in-progress', 'completed']);
+
+      if (checkError) {
+        console.error('❌ Error checking existing calls:', checkError);
+      }
+
+      // If there's a recent call (within last 5 minutes), skip
+      if (existingCalls && existingCalls.length > 0) {
+        const recentCall = existingCalls.find(call => {
+          const callTime = new Date(call.created_at).getTime();
+          const fiveMinutesAgo = Date.now() - (5 * 60 * 1000);
+          return callTime > fiveMinutesAgo;
+        });
+
+        if (recentCall) {
+          console.log(`⏭️ Skipping duplicate call for lead ${lead.id} - recent call exists (${recentCall.id})`);
+          return {
+            success: false,
+            callId: recentCall.id,
+            message: 'Recent call already exists for this lead'
+          };
+        }
+      }
+
       // Format phone number to E.164 international format
       const formattedPhone = this.formatPhoneNumber(lead.phone);
       console.log(`📱 Formatted phone number: "${lead.phone}" → "${formattedPhone}"`);
@@ -766,7 +946,15 @@ export class VAPIOutboundService {
 
       let vapiCall;
       if (this.vapiService) {
-        vapiCall = await this.vapiService.createCall(callRequest);
+        try {
+          vapiCall = await this.vapiService.createCall(callRequest);
+          console.log('✅ VAPI call created successfully:', vapiCall?.id || 'No ID returned');
+          console.log('📞 VAPI response:', JSON.stringify(vapiCall, null, 2));
+        } catch (vapiError: any) {
+          console.error('❌ VAPI call creation failed:', vapiError);
+          console.error('Error details:', vapiError.response?.data || vapiError.message);
+          throw new Error(`VAPI call failed: ${vapiError.message}`);
+        }
       } else {
         // Mock call for development without VAPI credentials
         vapiCall = {
@@ -776,6 +964,11 @@ export class VAPIOutboundService {
           customer: callRequest.customer
         };
         console.log('📞 Created mock call for development:', vapiCall.id);
+      }
+
+      // Ensure we have a valid call ID
+      if (!vapiCall || !vapiCall.id) {
+        throw new Error('VAPI did not return a valid call ID');
       }
 
       // Record the call in our database
@@ -897,6 +1090,49 @@ export class VAPIOutboundService {
         nextCallAt: lead.next_call_at
       }));
 
+      // Get phone number details from VAPI if available
+      let phoneNumbers: string[] = [];
+      let phoneNumberDetails: any[] = [];
+      
+      if (this.vapiClient && campaign.phone_number_id) {
+        try {
+          const response = await this.vapiClient.get('/phone-number');
+          const allNumbers = response.data;
+          
+          // Find the specific phone number for this campaign
+          const campaignNumber = allNumbers.find((n: any) => n.id === campaign.phone_number_id);
+          if (campaignNumber) {
+            phoneNumbers = [campaignNumber.number];
+            phoneNumberDetails = [{
+              id: campaignNumber.id,
+              number: campaignNumber.number,
+              name: campaignNumber.name || 'Primary',
+              provider: campaignNumber.provider
+            }];
+          }
+        } catch (error) {
+          console.warn('⚠️ Could not fetch VAPI phone numbers:', error);
+        }
+      }
+
+      // Get assistant details from VAPI if available
+      let assistantName = 'AI Assistant';
+      let assistantDetails: any = null;
+      
+      if (this.vapiClient && campaign.assistant_id) {
+        try {
+          const response = await this.vapiClient.get('/assistant');
+          const allAssistants = response.data;
+          const assistant = allAssistants.find((a: any) => a.id === campaign.assistant_id);
+          if (assistant) {
+            assistantName = assistant.name || 'AI Assistant';
+            assistantDetails = assistant;
+          }
+        } catch (error) {
+          console.warn('⚠️ Could not fetch VAPI assistants:', error);
+        }
+      }
+
       return {
         id: campaign.id,
         organizationId: this.organizationId,
@@ -904,7 +1140,11 @@ export class VAPIOutboundService {
         description: campaign.description,
         status: campaign.status,
         assistantId: campaign.assistant_id,
+        assistantName,
+        assistantDetails,
         phoneNumberId: campaign.phone_number_id,
+        phoneNumbers,
+        phoneNumberDetails,
         leads: transformedLeads,
         schedule: campaign.settings?.schedule,
         maxRetries: campaign.settings?.maxRetries || 3,
@@ -950,8 +1190,11 @@ export class VAPIOutboundService {
       await supabaseService
         .from('campaigns')
         .update({
+          total_leads: metrics.totalLeads,
+          calls_completed: metrics.callsCompleted,
           total_calls: metrics.callsAttempted,
-          successful_calls: metrics.callsConnected,
+          successful_calls: metrics.positiveOutcomes,
+          total_cost: metrics.totalCost,
           total_duration: metrics.averageDuration * metrics.callsConnected,
           updated_at: new Date().toISOString()
         })

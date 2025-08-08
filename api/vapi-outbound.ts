@@ -1,11 +1,16 @@
 import { Router, Response } from 'express';
-import { AuthenticatedRequest, authenticateUser } from '../middleware/auth';
+import { AuthenticatedRequest } from '../middleware/clerk-auth';
 import { VAPIOutboundService } from '../services/vapi-outbound-service';
-import multer from 'multer';
-import { supabaseService } from '../services/supabase-client';
 import { VAPIIntegrationService } from '../services/vapi-integration-service';
 import { AIConversationService } from '../services/ai-service';
 import { MockWebhookService } from '../services/mock-webhook-service';
+import multer from 'multer';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseService = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -26,8 +31,7 @@ const aiService = new AIConversationService({
   }
 });
 
-// Apply authentication to all routes
-router.use(authenticateUser);
+// Authentication is handled at the route level in server.ts
 
 /**
  * GET /api/vapi-outbound/campaigns
@@ -46,7 +50,6 @@ router.get('/campaigns', async (req: AuthenticatedRequest, res: Response) => {
       .from('campaigns')
       .select('*')
       .eq('organization_id', organizationId)
-      .eq('type', 'outbound')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -65,14 +68,39 @@ router.get('/campaigns', async (req: AuthenticatedRequest, res: Response) => {
               totalLeads: 0,
               callsAttempted: 0,
               callsConnected: 0,
+              callsCompleted: 0,
               connectionRate: 0,
               activeCalls: 0,
               leadsRemaining: 0,
               totalCost: 0
             };
 
+          // Get lead count from leads table
+          const { count: leadCount } = await supabaseService
+            .from('leads')
+            .select('*', { count: 'exact', head: true })
+            .eq('campaign_id', campaign.id);
+          
+          // Get call count and calculate cost
+          const { data: calls } = await supabaseService
+            .from('calls')
+            .select('duration, cost, status, outcome')
+            .eq('campaign_id', campaign.id);
+          
+          const callCount = calls?.length || 0;
+          const completedCalls = calls?.filter(c => 
+            c.status === 'completed' || c.outcome === 'completed' || c.duration > 0
+          ).length || 0;
+          
+          const totalCost = calls?.reduce((sum, call) => {
+            if (call.cost) return sum + call.cost;
+            if (call.duration) return sum + (call.duration / 60 * 0.15);
+            return sum;
+          }, 0) || 0;
+
           return {
             id: campaign.id,
+            apexId: campaign.apex_id || `apex${campaign.id.substring(0, 5)}`,
             name: campaign.name,
             description: campaign.description,
             status: campaign.status,
@@ -81,19 +109,42 @@ router.get('/campaigns', async (req: AuthenticatedRequest, res: Response) => {
             phoneNumberId: campaign.phone_number_id,
             createdAt: campaign.created_at,
             updatedAt: campaign.updated_at,
-            totalLeads: campaign.total_leads || 0,
-            totalCalls: campaign.total_calls || 0,
-            successfulCalls: campaign.successful_calls || 0,
-            callsCompleted: campaign.calls_completed || 0,
-            successRate: campaign.total_calls > 0 ? ((campaign.successful_calls || 0) / campaign.total_calls * 100) : 0,
-            totalCost: metrics.totalCost,
-            callsInProgress: metrics.activeCalls,
+            // Use actual data from database
+            totalLeads: leadCount || 0,
+            callsCompleted: completedCalls,
+            totalCost: totalCost,
+            successRate: callCount > 0 ? (completedCalls / callCount * 100) : 0,
+            // Additional fields for compatibility
+            totalCalls: callCount,
+            successfulCalls: completedCalls,
+            callsInProgress: 0,
             metrics
           };
         } catch (error) {
           console.warn('⚠️ Error getting metrics for campaign:', campaign.id, error);
+          
+          // Get lead count even on error
+          const { count: leadCount } = await supabaseService
+            .from('leads')
+            .select('*', { count: 'exact', head: true })
+            .eq('campaign_id', campaign.id);
+          
+          // Get basic call data
+          const { data: calls } = await supabaseService
+            .from('calls')
+            .select('duration, cost')
+            .eq('campaign_id', campaign.id);
+          
+          const callCount = calls?.length || 0;
+          const basicCost = calls?.reduce((sum, call) => {
+            if (call.cost) return sum + call.cost;
+            if (call.duration) return sum + (call.duration / 60 * 0.15);
+            return sum;
+          }, 0) || 0;
+
           return {
             id: campaign.id,
+            apexId: campaign.apex_id || `apex${campaign.id.substring(0, 5)}`,
             name: campaign.name,
             description: campaign.description,
             status: campaign.status,
@@ -102,20 +153,22 @@ router.get('/campaigns', async (req: AuthenticatedRequest, res: Response) => {
             phoneNumberId: campaign.phone_number_id,
             createdAt: campaign.created_at,
             updatedAt: campaign.updated_at,
-            totalLeads: campaign.total_leads || 0,
-            totalCalls: campaign.total_calls || 0,
-            successfulCalls: campaign.successful_calls || 0,
-            callsCompleted: campaign.calls_completed || 0,
+            totalLeads: leadCount || 0,
+            callsCompleted: callCount,
+            totalCost: basicCost,
             successRate: 0,
-            totalCost: 0,
+            // Additional fields
+            totalCalls: callCount,
+            successfulCalls: 0,
             callsInProgress: 0,
             metrics: {
-              totalLeads: 0,
+              totalLeads: leadCount || 0,
               callsAttempted: 0,
               callsConnected: 0,
+              callsCompleted: 0,
               connectionRate: 0,
               activeCalls: 0,
-              leadsRemaining: 0,
+              leadsRemaining: leadCount || 0,
               totalCost: 0
             }
           };
@@ -464,6 +517,7 @@ router.get('/campaigns/:id/calls', async (req: AuthenticatedRequest, res: Respon
         id,
         vapi_call_id,
         lead_id,
+        to_number,
         phone_number,
         direction,
         status,
@@ -473,9 +527,11 @@ router.get('/campaigns/:id/calls', async (req: AuthenticatedRequest, res: Respon
         cost,
         transcript,
         summary,
-        recording,
-        sentiment_score,
-        leads!inner(first_name, last_name, email, company)
+        recording_url,
+        sentiment,
+        ai_confidence_score,
+        customer_name,
+        customer_phone
       `)
       .eq('campaign_id', campaignId)
       .eq('organization_id', organizationId);
@@ -502,58 +558,72 @@ router.get('/campaigns/:id/calls', async (req: AuthenticatedRequest, res: Respon
       throw callsError;
     }
 
-    // Transform the data for frontend consumption with AI enhancement
-    const transformedCalls = await Promise.all(
-      calls?.map(async (call) => {
-        // Extract customer name using AI if transcript available
-        let customerName = call.leads ? `${call.leads.first_name} ${call.leads.last_name}`.trim() : 'Unknown';
+    // Debug log
+    console.log('📞 Raw calls from DB:', calls?.map(c => ({ 
+      id: c.id.substring(0, 8), 
+      recording_url: c.recording_url ? 'present' : 'null',
+      status: c.status 
+    })));
+
+    // Fetch lead data for all calls
+    const leadIds = calls?.map(c => c.lead_id).filter(id => id);
+    let leadsMap = new Map();
+    
+    if (leadIds && leadIds.length > 0) {
+      const { data: leads } = await supabaseService
+        .from('leads')
+        .select('id, first_name, last_name, phone, email, company')
+        .in('id', leadIds);
         
-        if (call.transcript && customerName === 'Unknown') {
-          try {
-            const aiExtractedName = await aiService.extractCustomerName(call.transcript);
-            if (aiExtractedName) {
-              customerName = aiExtractedName;
-            }
-          } catch (error) {
-            console.warn('Failed to extract customer name with AI:', error);
-          }
-        }
+      if (leads) {
+        leads.forEach(lead => {
+          leadsMap.set(lead.id, lead);
+        });
+      }
+    }
 
-        // Format transcript with AI if available
-        let formattedTranscript;
-        if (call.transcript) {
-          try {
-            formattedTranscript = await aiService.formatTranscript(call.transcript);
-          } catch (error) {
-            console.warn('Failed to format transcript with AI:', error);
-            formattedTranscript = null;
-          }
-        } else {
-          formattedTranscript = null;
-        }
+    // Transform the data for frontend consumption
+    const transformedCalls = calls?.map((call) => {
+      // Get lead data if available
+      const lead = call.lead_id ? leadsMap.get(call.lead_id) : null;
+      // Get customer name from multiple sources
+      let customerName = call.customer_name;
+      
+      // If no customer name in call record, try to get from lead
+      if (!customerName && lead) {
+        customerName = `${lead.first_name || ''} ${lead.last_name || ''}`.trim();
+      }
+      
+      // Clean up the name if it's just whitespace
+      if (!customerName || customerName.trim() === '') {
+        customerName = 'Unknown';
+      }
+      
+      // Get phone number from multiple sources
+      const customerPhone = call.customer_phone || call.phone_number || call.to_number || (lead ? lead.phone : null);
 
-        return {
-          id: call.id,
-          vapiCallId: call.vapi_call_id,
-          customerName,
-          customerPhone: call.phone_number,
-          customerEmail: call.leads?.email || null,
-          customerCompany: call.leads?.company || null,
-          status: call.status,
-          startedAt: call.started_at,
-          endedAt: call.ended_at,
-          duration: call.duration || 0,
-          cost: call.cost || 0,
-          hasTranscript: !!(call.transcript),
-          hasRecording: !!(call.recording),
-          sentiment: call.sentiment_score || 'neutral',
-          transcript: call.transcript,
-          formattedTranscript,
-          summary: call.summary,
-          recording: call.recording
-        };
-      }) || []
-    );
+      return {
+        id: call.id,
+        vapiCallId: call.vapi_call_id,
+        customerName,
+        customerPhone,
+        customerEmail: lead ? lead.email : null,
+        customerCompany: lead ? lead.company : null,
+        status: call.status,
+        startedAt: call.started_at,
+        endedAt: call.ended_at,
+        duration: call.duration || 0,
+        cost: call.cost || 0,
+        hasTranscript: !!(call.transcript),
+        hasRecording: !!(call.recording_url),
+        sentiment: call.sentiment || 
+          (call.ai_confidence_score > 0.6 ? 'positive' : 
+           call.ai_confidence_score < 0.4 ? 'negative' : 'neutral'),
+        transcript: call.transcript,
+        summary: call.summary,
+        recording: call.recording_url
+      };
+    }) || [];
 
     // Get total count for pagination
     const { count: totalCount } = await supabaseService
@@ -610,12 +680,26 @@ router.get('/assistants', async (req: AuthenticatedRequest, res: Response) => {
 
     // Get assistants from VAPI
     let assistants: any[] = [];
+    let apiError: string | null = null;
+    
     try {
       assistants = await vapiService.listAssistants();
       console.log('✅ Successfully fetched assistants from VAPI:', assistants.length);
     } catch (error) {
       console.error('❌ Failed to fetch assistants from VAPI:', error);
-      // Return empty array - only use real VAPI data
+      apiError = error.response?.data?.message || error.message || 'Failed to fetch from VAPI';
+      
+      // Check if it's an authentication error
+      if (error.response?.status === 401) {
+        return res.status(400).json({
+          error: 'VAPI API key is invalid or expired',
+          message: 'Please check your VAPI API key configuration',
+          details: apiError,
+          assistants: []
+        });
+      }
+      
+      // For other errors, return empty array but log the error
       assistants = [];
     }
 
@@ -638,7 +722,25 @@ router.get('/assistants', async (req: AuthenticatedRequest, res: Response) => {
       isActive: true
     }));
 
-    res.json({ assistants: formattedAssistants });
+    // Include local assistants if available
+    if (localAssistants && localAssistants.length > 0) {
+      const localFormatted = localAssistants.map(assistant => ({
+        id: assistant.vapi_assistant_id,
+        name: assistant.name || 'Unnamed Assistant',
+        type: assistant.type || 'outbound',
+        voice: assistant.voice_id || 'elevenlabs',
+        model: 'openai',
+        firstMessage: assistant.first_message || '',
+        createdAt: assistant.created_at,
+        isActive: assistant.is_active
+      }));
+      formattedAssistants.push(...localFormatted);
+    }
+
+    res.json({ 
+      assistants: formattedAssistants,
+      ...(apiError && { warning: `VAPI API Error: ${apiError}` })
+    });
   } catch (error) {
     console.error('❌ Error fetching assistants:', error);
     res.status(500).json({ 
@@ -673,12 +775,26 @@ router.get('/phone-numbers', async (req: AuthenticatedRequest, res: Response) =>
 
     // Get phone numbers from VAPI
     let phoneNumbers: any[] = [];
+    let apiError: string | null = null;
+    
     try {
       phoneNumbers = await vapiService.getPhoneNumbers();
       console.log('✅ Successfully fetched phone numbers from VAPI:', phoneNumbers.length);
     } catch (error) {
       console.error('❌ Failed to fetch phone numbers from VAPI:', error);
-      // Return empty array - only use real VAPI data
+      apiError = error.response?.data?.message || error.message || 'Failed to fetch from VAPI';
+      
+      // Check if it's an authentication error
+      if (error.response?.status === 401) {
+        return res.status(400).json({
+          error: 'VAPI API key is invalid or expired',
+          message: 'Please check your VAPI API key configuration',
+          details: apiError,
+          phoneNumbers: []
+        });
+      }
+      
+      // For other errors, return empty array but log the error
       phoneNumbers = [];
     }
 
@@ -693,7 +809,10 @@ router.get('/phone-numbers', async (req: AuthenticatedRequest, res: Response) =>
       isActive: true
     }));
 
-    res.json({ phoneNumbers: formattedNumbers });
+    res.json({ 
+      phoneNumbers: formattedNumbers,
+      ...(apiError && { warning: `VAPI API Error: ${apiError}` })
+    });
   } catch (error) {
     console.error('❌ Error fetching phone numbers:', error);
     res.status(500).json({ 
@@ -913,6 +1032,7 @@ router.get('/calls/recent', async (req: AuthenticatedRequest, res: Response) => 
   }
 });
 
+
 /**
  * GET /api/vapi-outbound/calls/:id
  * Get detailed call information including transcript and recording
@@ -922,18 +1042,38 @@ router.get('/calls/:id', async (req: AuthenticatedRequest, res: Response) => {
     const { id: callId } = req.params;
     const organizationId = req.user?.organizationId;
 
+    console.log('📞 Fetching call details:', {
+      callId,
+      organizationId,
+      user: req.user,
+      authHeader: req.headers.authorization?.substring(0, 30) + '...'
+    });
+
     if (!organizationId) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      console.error('❌ No organization ID in request');
+      return res.status(401).json({ error: 'Unauthorized - no organization' });
     }
 
-    console.log('📞 Fetching call details:', callId);
+    // First check if call exists at all
+    const { data: callCheck, error: checkError } = await supabaseService
+      .from('calls')
+      .select('id, organization_id')
+      .eq('id', callId)
+      .single();
+      
+    console.log('📊 Call check result:', {
+      callExists: !!callCheck,
+      callOrgId: callCheck?.organization_id,
+      userOrgId: organizationId,
+      match: callCheck?.organization_id === organizationId
+    });
 
     // Get call details from database
     const { data: call, error: callError } = await supabaseService
       .from('calls')
       .select(`
         *,
-        leads(first_name, last_name, email, company, phone),
+        leads!calls_lead_id_fkey(first_name, last_name, email, company, phone),
         campaigns(name, description)
       `)
       .eq('id', callId)
@@ -941,43 +1081,60 @@ router.get('/calls/:id', async (req: AuthenticatedRequest, res: Response) => {
       .single();
 
     if (callError || !call) {
+      console.error('❌ Call not found in database:', { callId, error: callError });
       return res.status(404).json({ error: 'Call not found' });
     }
 
-    // Get VAPI call data if available
+    console.log('📊 Call from database:', {
+      id: call.id,
+      vapi_call_id: call.vapi_call_id,
+      status: call.status
+    });
+
+    // Get VAPI call data - this is the primary source of truth
     let vapiCallData: any = null;
     if (call.vapi_call_id) {
       try {
+        console.log('🔍 Fetching VAPI data for call:', call.vapi_call_id);
         const outboundService = await VAPIOutboundService.forOrganization(organizationId);
         if (outboundService) {
           vapiCallData = await outboundService.getVAPICallData(call.vapi_call_id);
+          console.log('✅ VAPI data retrieved:', {
+            hasTranscript: !!vapiCallData?.transcript,
+            hasRecording: !!vapiCallData?.recordingUrl,
+            duration: vapiCallData?.duration
+          });
         }
       } catch (error) {
         console.warn('⚠️ Could not fetch VAPI call data:', error);
       }
     }
 
-    // Combine database and VAPI data
+    // Combine database and VAPI data - VAPI data takes priority
     const callDetails = {
       id: call.id,
       vapiCallId: call.vapi_call_id,
       campaignId: call.campaign_id,
       campaignName: call.campaigns?.name,
       leadId: call.lead_id,
-      customerName: call.customer_name,
-      customerPhone: call.phone_number,
+      customerName: vapiCallData?.customer?.name || call.customer_name || 
+                    (call.leads?.first_name ? `${call.leads.first_name} ${call.leads.last_name || ''}`.trim() : 'Unknown'),
+      customerPhone: vapiCallData?.customer?.number || call.customer_phone || call.to_number || call.phone_number,
       customerEmail: call.leads?.email,
       customerCompany: call.leads?.company,
       direction: call.direction,
-      status: call.status,
-      startedAt: call.started_at,
-      endedAt: call.ended_at,
-      duration: call.duration,
-      cost: call.cost || 0,
-      transcript: call.transcript || vapiCallData?.transcript || null,
-      summary: call.summary || vapiCallData?.summary || null,
-      recording: call.recording_url || vapiCallData?.recordingUrl || null,
-      metadata: call.metadata || vapiCallData?.metadata || null,
+      status: vapiCallData?.status || call.status,
+      startedAt: vapiCallData?.startedAt || call.started_at,
+      endedAt: vapiCallData?.endedAt || call.ended_at,
+      duration: vapiCallData?.duration || call.duration || 0,
+      cost: vapiCallData?.cost || call.cost || 0,
+      transcript: vapiCallData?.transcript || call.transcript || null,
+      summary: vapiCallData?.summary || call.summary || null,
+      recording: vapiCallData?.recordingUrl || call.recording_url || null,
+      recording_url: vapiCallData?.recordingUrl || call.recording_url || null,
+      sentiment: vapiCallData?.analysis?.sentiment || call.sentiment,
+      keywords: vapiCallData?.analysis?.keywords || call.keywords,
+      metadata: vapiCallData?.metadata || call.metadata || null,
       createdAt: call.created_at,
       updatedAt: call.updated_at
     };

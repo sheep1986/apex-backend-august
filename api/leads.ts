@@ -595,6 +595,132 @@ router.get('/stats/overview', authenticateUser, async (req: AuthenticatedRequest
 });
 
 /**
+ * POST /api/leads/upload-preview
+ * Preview CSV file contents without importing
+ */
+router.post('/upload-preview', authenticateUser, upload.single('file'), async (req: AuthenticatedRequest, res) => {
+  try {
+    const file = req.file;
+    
+    if (!file) {
+      return res.status(400).json({ error: 'No CSV file provided' });
+    }
+
+    console.log('📁 Processing CSV preview for file:', file.originalname);
+
+    // Parse the CSV content
+    const csvContent = file.buffer.toString('utf-8');
+    const lines = csvContent.split('\n').filter(line => line.trim());
+    
+    if (lines.length === 0) {
+      return res.status(400).json({ error: 'CSV file is empty' });
+    }
+
+    // Parse headers
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    console.log('📋 CSV Headers:', headers);
+    
+    // Parse data rows
+    const dataRows = lines.slice(1);
+    const preview = [];
+    let validLeads = 0;
+    let invalidLeads = 0;
+    let duplicates = 0;
+
+    // Process up to 10 rows for preview
+    const previewLimit = Math.min(10, dataRows.length);
+    
+    for (let i = 0; i < previewLimit; i++) {
+      const row = dataRows[i];
+      if (!row.trim()) continue;
+
+      const values = row.split(',').map(v => v.trim().replace(/"/g, ''));
+      const lead: any = {};
+
+      // Map CSV columns to lead fields
+      headers.forEach((header, index) => {
+        const value = values[index] || '';
+        
+        // Map common column names
+        switch (header.toLowerCase()) {
+          case 'first name':
+          case 'firstname':
+          case 'first_name':
+            lead.firstName = value;
+            break;
+          case 'last name':
+          case 'lastname':
+          case 'last_name':
+            lead.lastName = value;
+            break;
+          case 'phone':
+          case 'phone number':
+          case 'phone_number':
+            lead.phoneNumber = value;
+            break;
+          case 'email':
+          case 'email address':
+          case 'email_address':
+            lead.email = value;
+            break;
+          case 'company':
+          case 'company name':
+          case 'company_name':
+            lead.company = value;
+            break;
+          case 'timezone':
+          case 'time zone':
+          case 'time_zone':
+            lead.timezone = value || 'EST';
+            break;
+          default:
+            lead.customFields = lead.customFields || {};
+            lead.customFields[header] = value;
+            break;
+        }
+      });
+
+      // Validate lead data
+      if (lead.firstName && lead.phoneNumber) {
+        lead.status = 'valid';
+        validLeads++;
+      } else {
+        lead.status = 'invalid';
+        invalidLeads++;
+      }
+
+      preview.push(lead);
+    }
+
+    const totalLeads = dataRows.length;
+    
+    console.log('✅ CSV Preview processed:', {
+      totalLeads,
+      validLeads,
+      invalidLeads,
+      previewCount: preview.length
+    });
+
+    res.json({
+      totalLeads,
+      validLeads,
+      invalidLeads,
+      duplicates,
+      preview,
+      fileName: file.originalname,
+      headers
+    });
+
+  } catch (error) {
+    console.error('❌ CSV preview error:', error);
+    res.status(500).json({ 
+      error: 'Failed to preview CSV file', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    });
+  }
+});
+
+/**
  * Upload CSV file for lead import
  * Supports both B2C and B2B campaigns with different validation rules
  */

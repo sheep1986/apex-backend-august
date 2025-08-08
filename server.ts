@@ -9,18 +9,41 @@ import callsRouter from './api/calls';
 import campaignsRouter from './api/campaigns';
 import phoneNumbersRouter from './api/phone-numbers';
 import organizationsRouter from './api/organizations';
-import userManagementRouter from './api/user-management';
+// import userManagementRouter from './api/user-management'; // Disabled due to Clerk dependency
 import teamManagementRouter from './api/team-management';
 import messagingRouter from './api/messaging';
 import notificationsRouter from './api/notifications';
+import vapiWebhookEnhancedRouter from './api/vapi-webhook-enhanced';
 import vapiWebhookRouter from './api/vapi-webhook';
+import stableVapiWebhookRouter from './api/stable-vapi-webhook';
+import stableVapiDataRouter from './api/stable-vapi-data';
 import vapiOutboundRouter from './api/vapi-outbound';
+import vapiAutomationWebhookRouter from './api/vapi-automation-webhook';
+import campaignAutomationRouter from './api/campaign-automation';
 import billingRouter from './api/billing';
 import stripeWebhookRouter from './api/stripe-webhook';
-import organizationSetupRouter from './api/organization-setup';
+import syncVapiCallRouter from './api/sync-vapi-call';
+import organizationSetupRouter from './api/organization-setup-fixed';
 import userProfileRouter from './api/user-profile';
 import platformAnalyticsRouter from './api/platform-analytics';
-import { authenticateUser } from './middleware/auth';
+import debugVapiRouter from './api/debug-vapi';
+import invitationsRouter from './api/invitations';
+import vapiCredentialsRouter from './api/vapi-credentials';
+import testVapiRouter from './api/test-vapi';
+import vapiDataRouter from './api/vapi-data';
+import debugVapiTestRouter from './api/debug-vapi-test';
+import debugFrontendRouter from './api/debug-frontend';
+import debugVapiNoAuthRouter from './api/debug-vapi-no-auth';
+import organizationSettingsRouter from './api/organization-settings';
+import appointmentsRouter from './api/appointments';
+import platformMonitoringRouter from './api/platform-monitoring';
+import { authenticateUser } from './middleware/clerk-auth';
+import { campaignExecutor } from './services/campaign-executor';
+import { callCleanupService } from './services/call-cleanup-service';
+import * as apiConfigurationsController from './api/api-configurations';
+import { autoConfigureVAPI } from './api/vapi-auto-setup';
+import { rawBodyMiddleware } from './middleware/raw-body';
+
 // Load environment variables
 config();
 
@@ -41,6 +64,7 @@ app.use(cors({
       'http://localhost:5178',
       'http://localhost:5179',
       'http://localhost:5180',
+      'http://localhost:5522',
       'http://localhost:3000',
       'http://localhost:8080',
       process.env['FRONTEND_URL']
@@ -69,7 +93,13 @@ app.use('/api/', limiter);
 // Compression
 app.use(compression());
 
-// Body parsing middleware
+// Body parsing middleware - Use raw body middleware for webhook routes
+app.use('/api/vapi-enhanced/webhook', rawBodyMiddleware);
+app.use('/api/vapi/webhook', rawBodyMiddleware);
+app.use('/api/vapi-automation-webhook', rawBodyMiddleware);
+app.use('/api/stable-vapi/webhook', rawBodyMiddleware);
+
+// Regular body parsing for other routes
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -120,23 +150,52 @@ app.post('/api/public/users', async (req: express.Request, res: express.Response
 });
 
 // API routes (require authentication)
-app.use('/api/leads', leadsRouter);
-app.use('/api/calls', callsRouter);
-app.use('/api/campaigns', campaignsRouter);
-app.use('/api/phone-numbers', phoneNumbersRouter);
-app.use('/api/organizations', organizationsRouter);
-app.use('/api/organization-setup', organizationSetupRouter);
-app.use('/api/user-profile', userProfileRouter);
-app.use('/api/platform-analytics', platformAnalyticsRouter);
-app.use('/api/vapi-outbound', vapiOutboundRouter);
+app.use('/api/leads', authenticateUser, leadsRouter);
+app.use('/api/calls', authenticateUser, callsRouter);
+app.use('/api/campaigns', authenticateUser, campaignsRouter);
+app.use('/api/campaign-automation', authenticateUser, campaignAutomationRouter);
+app.use('/api/sync-vapi-call', authenticateUser, syncVapiCallRouter);
+app.use('/api/phone-numbers', authenticateUser, phoneNumbersRouter);
+app.use('/api/organizations', authenticateUser, organizationsRouter);
+app.use('/api/organization-settings', authenticateUser, organizationSettingsRouter);
+app.use('/api/organization-setup', organizationSetupRouter); // Keep public for initial setup
+app.use('/api/user-profile', authenticateUser, userProfileRouter);
+app.use('/api/platform-analytics', authenticateUser, platformAnalyticsRouter);
+app.use('/api/vapi-outbound', authenticateUser, vapiOutboundRouter);
+app.use('/api/debug-vapi', authenticateUser, debugVapiRouter);
+app.use('/api/vapi-credentials', authenticateUser, vapiCredentialsRouter);
+app.use('/api/test-vapi', authenticateUser, testVapiRouter);
+app.use('/api/vapi-data', authenticateUser, vapiDataRouter);
+app.use('/api/debug-vapi-test', debugVapiTestRouter); // No auth for debugging
+app.use('/api/debug-frontend', debugFrontendRouter); // No auth for frontend debugging
+app.use('/api/debug-vapi-no-auth', debugVapiNoAuthRouter); // No auth for VAPI debugging
+app.use('/api', invitationsRouter); // Keep public for invitation acceptance
 app.use('/api/messages', authenticateUser, messagingRouter);
-app.use('/api/users', userManagementRouter);
+// app.use('/api/users', userManagementRouter); // Disabled due to Clerk dependency
 app.use('/api/team', authenticateUser, teamManagementRouter);
 app.use('/api/notifications', authenticateUser, notificationsRouter);
+app.use('/api/appointments', authenticateUser, appointmentsRouter);
+app.use('/api/platform-monitoring', authenticateUser, platformMonitoringRouter);
 app.use('/api/billing', billingRouter); // Some endpoints don't require auth
 
+// API Configuration routes (user-based, authenticated)
+app.get('/api/api-configurations', authenticateUser, apiConfigurationsController.getAllApiConfigurations);
+app.get('/api/api-configurations/:serviceName', authenticateUser, apiConfigurationsController.getApiConfiguration);
+app.post('/api/api-configurations/:serviceName', authenticateUser, apiConfigurationsController.saveApiConfiguration);
+app.delete('/api/api-configurations/:serviceName', authenticateUser, apiConfigurationsController.deleteApiConfiguration);
+app.get('/api/api-configurations-audit', authenticateUser, apiConfigurationsController.getConfigurationAuditLog);
+
+// VAPI Auto-Setup route
+app.post('/api/vapi-auto-setup', authenticateUser, autoConfigureVAPI);
+
 // Webhook routes (no authentication - validated by webhook secret)
-app.use('/api/vapi', vapiWebhookRouter);
+app.use('/api/vapi-enhanced', vapiWebhookEnhancedRouter); // New enhanced webhook with all fixes
+app.use('/api/vapi', vapiWebhookRouter); // Keep old webhook for backward compatibility
+app.use('/api/vapi-automation-webhook', vapiAutomationWebhookRouter);
+app.use('/api/stable-vapi', stableVapiWebhookRouter);
+
+// Stable VAPI data access routes (basic auth protection)
+app.use('/api/stable-vapi-data', stableVapiDataRouter);
 
 // Stripe webhook (requires raw body)
 app.use('/api/stripe', express.raw({ type: 'application/json' }), stripeWebhookRouter);
@@ -257,6 +316,13 @@ app.listen(PORT, () => {
   console.log(`🚀 Apex AI Calling Platform API Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  
+  // Start campaign automation system
+  console.log('🎯 Starting campaign automation system...');
+  // The campaign executor starts automatically when imported
+  
+  console.log('🧹 Starting call cleanup service...');
+  callCleanupService.start();
 });
 
 export default app; 

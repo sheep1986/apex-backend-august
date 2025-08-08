@@ -1,11 +1,15 @@
 import { Router, Response } from 'express';
-import { AuthenticatedRequest, authenticateUser } from '../middleware/auth';
-import { supabaseService } from '../services/supabase-client';
+import { AuthenticatedRequest } from '../middleware/clerk-auth';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseService = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const router = Router();
 
-// Apply authentication to all routes
-router.use(authenticateUser);
+// Authentication is handled at the route level in server.ts
 
 // GET /api/campaigns - Get all campaigns with filtering and pagination
 router.get('/', async (req: AuthenticatedRequest, res: Response) => {
@@ -20,7 +24,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
       sortOrder = 'desc'
     } = req.query;
 
-    const userId = req.user?.userId;
+    const userId = req.user?.id;
     const organizationId = req.user?.organizationId;
 
     if (!userId || !organizationId) {
@@ -31,9 +35,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
       .from('campaigns')
       .select(`
         *,
-        organization:organizations(name),
-        leads_count:leads(count),
-        calls_count:calls(count)
+        organization:organizations(name)
       `)
       .eq('organization_id', organizationId);
 
@@ -67,23 +69,73 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
       return res.status(500).json({ error: 'Failed to fetch campaigns' });
     }
 
-    // Get campaign metrics
+    // Get campaign metrics and counts
     const campaignsWithMetrics = await Promise.all(
       (campaigns || []).map(async (campaign) => {
+        // Get campaign metrics
         const { data: metrics } = await supabaseService
           .from('campaign_metrics')
           .select('*')
           .eq('campaign_id', campaign.id)
           .single();
 
+        // Count leads for this campaign
+        const { count: leadsCount } = await supabaseService
+          .from('leads')
+          .select('*', { count: 'exact', head: true })
+          .eq('campaign_id', campaign.id);
+
+        // Count calls for this campaign
+        const { count: callsCount } = await supabaseService
+          .from('calls')
+          .select('*', { count: 'exact', head: true })
+          .eq('campaign_id', campaign.id);
+
+        // Count successful/completed calls
+        const { count: completedCallsCount } = await supabaseService
+          .from('calls')
+          .select('*', { count: 'exact', head: true })
+          .eq('campaign_id', campaign.id)
+          .in('outcome', ['interested', 'appointment_scheduled', 'qualified']);
+
+        // Get calls with cost calculation
+        const { data: callsData } = await supabaseService
+          .from('calls')
+          .select('duration, cost, status, outcome')
+          .eq('campaign_id', campaign.id);
+        
+        // Calculate total cost
+        const totalCost = callsData?.reduce((sum, call) => {
+          if (call.cost) return sum + call.cost;
+          if (call.duration) return sum + (call.duration / 60 * 0.15); // $0.15 per minute
+          return sum;
+        }, 0) || 0;
+        
+        // Calculate conversion rate
+        const conversionRate = callsCount && callsCount > 0 
+          ? ((completedCallsCount || 0) / callsCount * 100).toFixed(1)
+          : 0;
+        
+        // Determine if campaign is complete
+        const leadGoal = campaign.lead_goal || 100; // Default to 100 if not set
+        const isComplete = (leadsCount || 0) >= leadGoal && leadGoal > 0;
+        const effectiveStatus = isComplete ? 'completed' : (campaign.status || 'active');
+
         return {
           ...campaign,
+          status: effectiveStatus,
+          lead_goal: leadGoal,
+          spent: totalCost,
+          leads_count: { count: leadsCount || 0 },
+          calls_count: { count: callsCount || 0 },
+          completed_calls_count: completedCallsCount || 0,
+          conversion_rate: conversionRate,
           metrics: metrics || {
-            total_calls: 0,
-            connected_calls: 0,
-            conversion_rate: 0,
+            total_calls: callsCount || 0,
+            connected_calls: completedCallsCount || 0,
+            conversion_rate: conversionRate,
             average_duration: 0,
-            total_cost: 0
+            total_cost: totalCost
           }
         };
       })
@@ -153,10 +205,17 @@ router.post('/', async (req: AuthenticatedRequest, res: Response) => {
       schedule,
       budget,
       phone_numbers,
-      status = 'draft'
+      status = 'draft',
+      lead_goal,
+      start_date,
+      end_date,
+      assistant_id,
+      timezone,
+      calling_hours,
+      calling_days
     } = req.body;
 
-    const userId = req.user?.userId;
+    const userId = req.user?.id;
     const organizationId = req.user?.organizationId;
 
     if (!userId || !organizationId) {
@@ -181,6 +240,13 @@ router.post('/', async (req: AuthenticatedRequest, res: Response) => {
         budget,
         phone_numbers,
         status,
+        lead_goal: lead_goal || 100,
+        start_date: start_date || null,
+        end_date: end_date || null,
+        assistant_id: assistant_id || null,
+        timezone: timezone || 'America/New_York',
+        calling_hours: calling_hours || '9:00 AM - 5:00 PM',
+        calling_days: calling_days || ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
         organization_id: organizationId,
         created_by: userId,
         created_at: new Date().toISOString(),

@@ -58,6 +58,7 @@ interface LeadStats {
 interface ImportConfig {
   organizationId: string;
   userId: string;
+  campaignId?: string; // Optional campaign ID
   mappingConfig: {
     firstName?: string;
     lastName?: string;
@@ -578,6 +579,25 @@ export class LeadImportService {
     const errors: string[] = [];
     const warnings: string[] = [];
     let importedRows = 0;
+    
+    // Get campaign creator to set as lead owner
+    let leadOwnerId: string | null = null;
+    if (campaignId) {
+      try {
+        const { data: campaign, error } = await this.supabase
+          .from('campaigns')
+          .select('created_by')
+          .eq('id', campaignId)
+          .single();
+          
+        if (!error && campaign?.created_by) {
+          leadOwnerId = campaign.created_by;
+          console.log(`📋 Setting lead owner to campaign creator: ${leadOwnerId}`);
+        }
+      } catch (error) {
+        console.warn('Could not fetch campaign creator:', error);
+      }
+    }
 
     // Process leads in batches to avoid overwhelming the database
     const batchSize = 100;
@@ -587,21 +607,19 @@ export class LeadImportService {
       try {
         const leadRecords = batch.map(lead => ({
           id: uuidv4(),
-          account_id: accountId,
+          organization_id: accountId, // Note: accountId is actually organizationId
           campaign_id: campaignId,
           external_id: `${importId}_${i + batch.indexOf(lead)}`,
-          phone_number: lead.phone,
-          phone_number_formatted: this.normalizePhoneNumber(lead.phone),
+          phone: lead.phone, // The actual column is 'phone' not 'phone_number'
           first_name: lead.firstName.trim(),
           last_name: lead.lastName.trim(),
           email: lead.email?.trim() || null,
           company: lead.company?.trim() || null,
-          title: lead.title?.trim() || null,
+          job_title: lead.title?.trim() || null, // Column is 'job_title' not 'title'
           custom_fields: lead.customFields,
           status: lead.status?.toLowerCase() || 'new',
-          priority: this.getPriorityValue(lead.priority),
-          tags: lead.tags ? lead.tags.split(',').map(tag => tag.trim()) : [],
-          source: lead.source || 'CSV Import',
+          lead_source: lead.source || 'CSV Import', // Column is 'lead_source' not 'source'
+          uploaded_by: leadOwnerId, // Set the campaign creator as the lead owner
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }));
@@ -1048,6 +1066,24 @@ export class LeadImportService {
     const leads: any[] = [];
     const errors: ImportResult['errors'] = [];
     let duplicates = 0;
+    
+    // Get campaign creator if campaign ID is provided
+    let leadOwnerId = config.userId; // Default to the user doing the import
+    if (config.campaignId) {
+      try {
+        const { data: campaign } = await supabase
+          .from('campaigns')
+          .select('created_by')
+          .eq('id', config.campaignId)
+          .single();
+          
+        if (campaign?.created_by) {
+          leadOwnerId = campaign.created_by;
+        }
+      } catch (error) {
+        console.warn('Could not fetch campaign creator, using userId instead');
+      }
+    }
 
     // Process each record
     records.forEach((record, index) => {
@@ -1071,7 +1107,9 @@ export class LeadImportService {
           ...lead,
           organization_id: config.organizationId,
           import_batch_id: importId,
-          external_id: `${importId}-${batchIndex}-${index}`
+          external_id: `${importId}-${batchIndex}-${index}`,
+          uploaded_by: leadOwnerId, // Set lead owner (campaign creator or user)
+          campaign_id: config.campaignId // Include campaign ID if provided
         });
 
         // Add to existing phones set

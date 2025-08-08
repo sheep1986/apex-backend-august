@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '@clerk/backend';
 import supabase from '../services/supabase-client';
 
 export interface AuthenticatedRequest extends Request {
@@ -28,42 +27,38 @@ export const authenticateUser = async (
     const token = authHeader.substring(7);
     console.log('🔑 Authenticating token:', token.substring(0, 10) + '...');
 
-    // Try Clerk authentication first
-    if (process.env.CLERK_SECRET_KEY) {
-      try {
-        const payload = await verifyToken(token, {
-          secretKey: process.env.CLERK_SECRET_KEY,
-        });
+    // Try Supabase JWT authentication first
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser(token);
+      
+      if (user && !error) {
+        console.log('✅ Valid Supabase token for:', user.email);
+        
+        // Look up user by email in database
+        const { data: dbUser, error: dbError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('email', user.email)
+          .single();
 
-        if (payload && payload.email) {
-          console.log('✅ Valid Clerk token for:', payload.email);
+        if (dbUser && !dbError) {
+          req.user = {
+            id: dbUser.id,
+            firstName: dbUser.first_name,
+            lastName: dbUser.last_name,
+            email: dbUser.email,
+            role: dbUser.role,
+            organizationId: dbUser.organization_id
+          };
           
-          // Look up user by email in database
-          const { data: user, error } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', payload.email)
-            .single();
-
-          if (user && !error) {
-            req.user = {
-              id: user.id,
-              firstName: user.first_name,
-              lastName: user.last_name,
-              email: user.email,
-              role: user.role,
-              organizationId: user.organization_id
-            };
-            
-            console.log('✅ User authenticated:', user.email, 'role:', user.role);
-            return next();
-          } else {
-            console.log('❌ User not found in database for email:', payload.email);
-          }
+          console.log('✅ User authenticated via Supabase:', dbUser.email, 'role:', dbUser.role);
+          return next();
+        } else {
+          console.log('❌ User not found in database for email:', user.email);
         }
-      } catch (clerkError) {
-        console.log('❌ Clerk verification failed:', clerkError.message);
       }
+    } catch (supabaseError) {
+      console.log('❌ Supabase verification failed:', supabaseError.message);
     }
 
     // Simple email-based authentication for development

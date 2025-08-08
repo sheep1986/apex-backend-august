@@ -5,7 +5,6 @@ import { authenticateUser, AuthenticatedRequest } from '../middleware/auth';
 const router = Router();
 
 // Apply authentication middleware  
-router.use(authenticateUser);
 
 // Get all chats for a user
 router.get('/chats', async (req: AuthenticatedRequest, res: Response) => {

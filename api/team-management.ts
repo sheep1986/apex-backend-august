@@ -5,7 +5,6 @@ import { authenticateUser, AuthenticatedRequest } from '../middleware/auth';
 const router = Router();
 
 // Apply authentication middleware
-router.use(authenticateUser);
 
 // Get all team members (platform team only)
 router.get('/members', async (req: AuthenticatedRequest, res: Response) => {

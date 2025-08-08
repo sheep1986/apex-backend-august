@@ -1,5 +1,5 @@
 import express from 'express';
-import { AuthenticatedRequest, authenticateUser } from '../middleware/auth';
+import { AuthenticatedRequest, authenticateUser } from '../middleware/clerk-auth';
 import supabase from '../services/supabase-client';
 
 const router = express.Router();

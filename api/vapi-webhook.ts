@@ -26,11 +26,26 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
     if (call?.id) {
       // Try to find the call in our database to get the organization
-      const { data: existingCall } = await supabaseService
+      // First try by VAPI call ID, then by regular ID
+      let existingCall: any;
+      
+      const { data: callByVapiId } = await supabaseService
         .from('calls')
-        .select('organization_id')
+        .select('organization_id, id')
         .eq('vapi_call_id', call.id)
         .single();
+      
+      if (callByVapiId) {
+        existingCall = callByVapiId;
+      } else {
+        // Try finding by regular ID
+        const { data: callById } = await supabaseService
+          .from('calls')
+          .select('organization_id, id')
+          .eq('id', call.id)
+          .single();
+        existingCall = callById;
+      }
 
       if (existingCall) {
         organizationId = existingCall.organization_id;
@@ -135,6 +150,8 @@ async function updateCallFromWebhook(call: any, updates: any = {}): Promise<void
   try {
     const updateData: any = {
       updated_at: new Date().toISOString(),
+      raw_webhook_data: call, // Store complete raw webhook data
+      vapi_webhook_received_at: new Date().toISOString(),
       ...updates
     };
 
@@ -152,7 +169,47 @@ async function updateCallFromWebhook(call: any, updates: any = {}): Promise<void
       updateData.summary = call.summary;
     }
     if (call.recordingUrl) {
-      updateData.recording = call.recordingUrl;
+      updateData.recording_url = call.recordingUrl;
+    }
+    
+    // Enhanced VAPI data capture
+    if (call.recording) {
+      updateData.recording_url = call.recording.url || call.recording;
+    }
+    if (call.analysis) {
+      updateData.outcome = call.analysis.outcome || call.analysis.summary;
+      updateData.sentiment = call.analysis.sentiment;
+      updateData.key_points = call.analysis.keyPoints;
+      updateData.call_quality_score = call.analysis.qualityScore || 0;
+    }
+    
+    // Try to extract outcome from structured data if available
+    if (call.messages && call.messages.length > 0) {
+      const lastMessage = call.messages[call.messages.length - 1];
+      if (lastMessage?.content) {
+        try {
+          const structuredData = JSON.parse(lastMessage.content);
+          if (structuredData.outcome) {
+            updateData.outcome = structuredData.outcome;
+          }
+        } catch (e) {
+          // Not JSON, use as text outcome
+          if (!updateData.outcome) {
+            updateData.outcome = lastMessage.content.substring(0, 500); // Limit length
+          }
+        }
+      }
+    }
+    
+    // Additional VAPI fields
+    if (call.startedAt) {
+      updateData.started_at = call.startedAt;
+    }
+    if (call.endedAt) {
+      updateData.ended_at = call.endedAt;
+    }
+    if (call.endedReason) {
+      updateData.outcome = updateData.outcome || call.endedReason;
     }
 
     console.log('📝 Updating call:', { 
@@ -161,15 +218,51 @@ async function updateCallFromWebhook(call: any, updates: any = {}): Promise<void
       cost: updateData.cost
     });
 
-    const { error } = await supabaseService
+    // Try updating by vapi_call_id first, then by regular id
+    let callUpdated = null;
+    
+    // First try vapi_call_id
+    const { data: updatedByVapi, error: vapiError } = await supabaseService
       .from('calls')
       .update(updateData)
-      .eq('vapi_call_id', call.id);
+      .eq('vapi_call_id', call.id)
+      .select()
+      .single();
+    
+    if (updatedByVapi) {
+      callUpdated = updatedByVapi;
+      console.log('✅ Call updated by vapi_call_id');
+    } else {
+      // Try regular id
+      const { data: updatedById, error: idError } = await supabaseService
+        .from('calls')
+        .update(updateData)
+        .eq('id', call.id)
+        .select()
+        .single();
+      
+      if (updatedById) {
+        callUpdated = updatedById;
+        console.log('✅ Call updated by regular id');
+      }
+    }
 
-    if (error) {
-      console.error('❌ Error updating call:', error);
+    if (!callUpdated) {
+      console.error('❌ Could not find call to update with ID:', call.id);
     } else {
       console.log('✅ Call updated successfully');
+      
+      // If we have a transcript and this is completed, trigger AI processing
+      if (updateData.transcript && updateData.status === 'completed' && callUpdated.id) {
+        console.log('🤖 Triggering AI processing for transcript...');
+        try {
+          const { EnhancedAIProcessor } = require('../services/enhanced-ai-processor');
+          await EnhancedAIProcessor.processCall(callUpdated.id);
+          console.log('✅ AI processing triggered for call', callUpdated.id);
+        } catch (error) {
+          console.error('❌ Failed to trigger AI processing:', error);
+        }
+      }
       
       // If call is completed and has campaign, update campaign metrics
       if (updates.status === 'completed' && call.duration !== undefined) {

@@ -1,11 +1,15 @@
 import { Router, Response } from 'express';
-import { AuthenticatedRequest, authenticateUser } from '../middleware/auth';
-import { supabaseService } from '../services/supabase-client';
+import { AuthenticatedRequest } from '../middleware/clerk-auth';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseService = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const router = Router();
 
-// Apply authentication to all routes
-router.use(authenticateUser);
+// Authentication is handled at the route level in server.ts
 
 // VAPI API configuration
 const VAPI_API_URL = 'https://api.vapi.ai';

@@ -37,6 +37,16 @@ interface VAPIAssistant {
   serverUrlSecret?: string;
 }
 
+interface QualificationField {
+  field_key: string;
+  field_name: string;
+  field_type: string;
+  ai_detection_hints: string[];
+  scoring_weight: number;
+  is_required: boolean;
+  crm_action?: string;
+}
+
 interface VAPICall {
   id?: string;
   assistantId: string;
@@ -86,7 +96,9 @@ export class VAPIIntegrationService {
       headers: {
         'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 30000, // 30 second timeout
+      validateStatus: (status) => status < 500 // Accept any status < 500
     });
   }
 
@@ -101,7 +113,7 @@ export class VAPIIntegrationService {
       console.log('🔄 Checking organizations table for VAPI credentials...');
       const { data: organization, error: orgError } = await supabase
         .from('organizations')
-        .select('settings, vapi_api_key, vapi_settings')
+        .select('settings, vapi_api_key, vapi_private_key, vapi_settings')
         .eq('id', organizationId)
         .single();
 
@@ -124,14 +136,15 @@ export class VAPIIntegrationService {
           }
         }
         // Finally, try individual columns
-        else if (organization.vapi_api_key) {
+        else if (organization.vapi_private_key || organization.vapi_api_key) {
           vapiSettings = {
-            apiKey: organization.vapi_api_key,
-            privateKey: organization.vapi_api_key,
+            apiKey: organization.vapi_private_key || organization.vapi_api_key, // Use private key for API
+            privateKey: organization.vapi_private_key || organization.vapi_api_key,
+            publicKey: organization.vapi_api_key, // Public key stored in vapi_api_key
             webhookUrl: 'https://api.apexai.com/webhooks/vapi',
             enabled: true
           };
-          console.log('✅ Found VAPI credentials in organizations.vapi_api_key');
+          console.log('✅ Found VAPI credentials in organizations columns - using vapi_private_key for API');
         }
 
         if (vapiSettings && vapiSettings.apiKey) {
@@ -140,6 +153,13 @@ export class VAPIIntegrationService {
             console.log('⚠️ VAPI integration is disabled for this organization');
             return null;
           }
+          
+          console.log('🎯 Creating VAPI service with credentials:', {
+            hasApiKey: !!vapiSettings.apiKey,
+            apiKeyPreview: vapiSettings.apiKey ? vapiSettings.apiKey.substring(0, 10) + '...' : 'NO KEY',
+            organizationId,
+            source: 'organizations table'
+          });
           
           const config: VAPIConfig = {
             apiKey: vapiSettings.apiKey,
@@ -309,20 +329,76 @@ export class VAPIIntegrationService {
   async listAssistants(): Promise<any[]> {
     try {
       console.log('🔍 Making VAPI API call to list assistants...');
-      console.log('🔑 Using API key:', this.config.apiKey.substring(0, 10) + '...');
+      console.log('🔑 Using API key:', this.config.apiKey ? this.config.apiKey.substring(0, 10) + '...' : 'NO KEY');
+      console.log('📍 API Base URL:', this.client.defaults.baseURL);
+      console.log('🔐 Auth Header:', this.client.defaults.headers['Authorization'] ? 'Bearer ***' : 'NO AUTH');
       
-      const response = await this.client.get('/assistant');
-      console.log('✅ VAPI assistants API response:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Error listing VAPI assistants:', error);
-      if (error.response) {
-        console.error('❌ VAPI API Error Response:', {
-          status: error.response.status,
-          statusText: error.response.statusText,
-          data: error.response.data
+      // Try axios first
+      try {
+        const response = await this.client.get('/assistant');
+        console.log('✅ VAPI assistants API response:', {
+          status: response.status,
+          dataLength: Array.isArray(response.data) ? response.data.length : 'not array',
+          dataPreview: Array.isArray(response.data) ? `${response.data.length} assistants` : 'not array',
+          rawData: response.data
+        });
+        
+        // Log the actual response for debugging
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          console.log('⚠️ VAPI returned empty assistants array');
+          console.log('💡 This could mean:');
+          console.log('   1. No assistants created in VAPI dashboard');
+          console.log('   2. Using wrong API key (public vs private)');
+          console.log('   3. Assistants are under a different account');
+        }
+        
+        return response.data || [];
+      } catch (axiosError: any) {
+        console.error('⚠️ Axios request failed, trying native HTTPS...', axiosError.message);
+        
+        // Fallback to native HTTPS
+        const https = require('https');
+        return new Promise((resolve, reject) => {
+          const options = {
+            hostname: 'api.vapi.ai',
+            port: 443,
+            path: '/assistant',
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${this.config.apiKey}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          };
+          
+          const req = https.request(options, (res: any) => {
+            let data = '';
+            res.on('data', (chunk: any) => data += chunk);
+            res.on('end', () => {
+              if (res.statusCode === 200) {
+                try {
+                  const assistants = JSON.parse(data);
+                  console.log('✅ Native HTTPS success! Retrieved', assistants.length, 'assistants');
+                  resolve(assistants);
+                } catch (e) {
+                  reject(new Error('Failed to parse response'));
+                }
+              } else {
+                reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+              }
+            });
+          });
+          
+          req.on('error', (error: any) => {
+            console.error('❌ Native HTTPS also failed:', error.message);
+            reject(error);
+          });
+          
+          req.end();
         });
       }
+    } catch (error: any) {
+      console.error('❌ Error listing VAPI assistants:', error.message);
       throw error;
     }
   }
@@ -621,20 +697,76 @@ export class VAPIIntegrationService {
   async getPhoneNumbers(): Promise<any[]> {
     try {
       console.log('🔍 Making VAPI API call to list phone numbers...');
-      console.log('🔑 Using API key:', this.config.apiKey.substring(0, 10) + '...');
+      console.log('🔑 Using API key:', this.config.apiKey ? this.config.apiKey.substring(0, 10) + '...' : 'NO KEY');
+      console.log('📍 API Base URL:', this.client.defaults.baseURL);
+      console.log('🔐 Auth Header:', this.client.defaults.headers['Authorization'] ? 'Bearer ***' : 'NO AUTH');
       
-      const response = await this.client.get('/phone-number');
-      console.log('✅ VAPI phone numbers API response:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Error getting phone numbers:', error);
-      if (error.response) {
-        console.error('❌ VAPI API Error Response:', {
-          status: error.response.status,
-          statusText: error.response.statusText,
-          data: error.response.data
+      // Try axios first
+      try {
+        const response = await this.client.get('/phone-number');
+        console.log('✅ VAPI phone numbers API response:', {
+          status: response.status,
+          dataLength: Array.isArray(response.data) ? response.data.length : 'not array',
+          dataPreview: Array.isArray(response.data) ? `${response.data.length} phone numbers` : 'not array',
+          rawData: response.data
+        });
+        
+        // Log the actual response for debugging
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          console.log('⚠️ VAPI returned empty phone numbers array');
+          console.log('💡 This could mean:');
+          console.log('   1. No phone numbers purchased in VAPI dashboard');
+          console.log('   2. Using wrong API key (public vs private)');
+          console.log('   3. Phone numbers are under a different account');
+        }
+        
+        return response.data || [];
+      } catch (axiosError: any) {
+        console.error('⚠️ Axios request failed, trying native HTTPS...', axiosError.message);
+        
+        // Fallback to native HTTPS
+        const https = require('https');
+        return new Promise((resolve, reject) => {
+          const options = {
+            hostname: 'api.vapi.ai',
+            port: 443,
+            path: '/phone-number',
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${this.config.apiKey}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          };
+          
+          const req = https.request(options, (res: any) => {
+            let data = '';
+            res.on('data', (chunk: any) => data += chunk);
+            res.on('end', () => {
+              if (res.statusCode === 200) {
+                try {
+                  const phoneNumbers = JSON.parse(data);
+                  console.log('✅ Native HTTPS success! Retrieved', phoneNumbers.length, 'phone numbers');
+                  resolve(phoneNumbers);
+                } catch (e) {
+                  reject(new Error('Failed to parse response'));
+                }
+              } else {
+                reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+              }
+            });
+          });
+          
+          req.on('error', (error: any) => {
+            console.error('❌ Native HTTPS also failed:', error.message);
+            reject(error);
+          });
+          
+          req.end();
         });
       }
+    } catch (error: any) {
+      console.error('❌ Error getting phone numbers:', error.message);
       throw error;
     }
   }
@@ -644,7 +776,7 @@ export class VAPIIntegrationService {
    */
   async buyPhoneNumber(areaCode: string, name?: string): Promise<any> {
     try {
-      const response = await this.client.post('/phone-number/buy', {
+      const response = await this.client.post('/phone-numbers/buy', {
         areaCode,
         name
       });
@@ -705,6 +837,189 @@ export class VAPIIntegrationService {
     }
   }
 
+  /**
+   * Generate optimized script based on qualification fields
+   */
+  async generateQualificationScript(
+    campaignName: string,
+    qualificationFields: QualificationField[],
+    winningCriteria: any
+  ): Promise<{ systemPrompt: string; firstMessage: string }> {
+    const requiredFields = qualificationFields.filter(f => f.is_required);
+    const highValueFields = qualificationFields.filter(f => f.scoring_weight >= 70);
+
+    // Generate system prompt
+    let systemPrompt = `You are a professional sales representative for ${campaignName}. Your goal is to qualify leads based on specific criteria while maintaining a natural, friendly conversation.
+
+MAIN OBJECTIVE: ${winningCriteria.mainCriteria || 'Qualify leads for our solution'}
+
+QUALIFICATION CRITERIA:`;
+
+    // Add required fields
+    if (requiredFields.length > 0) {
+      systemPrompt += '\n\nREQUIRED INFORMATION (Must capture):';
+      requiredFields.forEach(field => {
+        systemPrompt += `\n- ${field.field_name}: Listen for ${field.ai_detection_hints.slice(0, 3).join(', ')}`;
+      });
+    }
+
+    // Add high-value fields
+    if (highValueFields.length > 0) {
+      systemPrompt += '\n\nHIGH PRIORITY (Try to capture):';
+      highValueFields.forEach(field => {
+        systemPrompt += `\n- ${field.field_name} (${field.scoring_weight}% importance)`;
+      });
+    }
+
+    // Add specific requirements
+    if (winningCriteria.requireCompanySize) {
+      systemPrompt += `\n\nCOMPANY SIZE: Must have at least ${winningCriteria.minCompanySize} employees`;
+    }
+
+    if (winningCriteria.requireBudget) {
+      systemPrompt += '\n\nBUDGET: Explore their budget for this type of solution';
+    }
+
+    // Add disqualifiers
+    if (winningCriteria.disqualifiers) {
+      systemPrompt += `\n\nDISQUALIFIERS (End call politely if detected):\n${winningCriteria.disqualifiers}`;
+    }
+
+    // Add conversation guidelines
+    systemPrompt += `
+
+CONVERSATION GUIDELINES:
+1. Be conversational and natural - this is not an interrogation
+2. Ask open-ended questions to gather information organically
+3. Listen actively and probe deeper on interesting points
+4. If they show high interest, try to book a meeting
+5. Keep the conversation under ${winningCriteria.minDuration || 3} minutes unless highly engaged
+6. Always be respectful and professional
+
+IMPORTANT: Capture specific details when mentioned, especially numbers, dates, and names.`;
+
+    // Generate first message
+    const firstMessageOptions = [
+      `Hi! This is {assistant_name} from ${campaignName}. I'm reaching out because ${winningCriteria.mainCriteria}. Do you have a quick moment?`,
+      `Hello! I'm {assistant_name} calling from ${campaignName}. We help businesses like yours ${winningCriteria.mainCriteria}. Is this a good time to chat for a minute?`,
+      `Hi there! {assistant_name} here from ${campaignName}. I'm calling because ${winningCriteria.mainCriteria}. Can I ask you a quick question?`
+    ];
+
+    const firstMessage = firstMessageOptions[Math.floor(Math.random() * firstMessageOptions.length)];
+
+    return { systemPrompt, firstMessage };
+  }
+
+  /**
+   * Update assistant with qualification-based script
+   */
+  async updateAssistantWithQualification(
+    assistantId: string,
+    campaignName: string,
+    qualificationFields: QualificationField[],
+    winningCriteria: any
+  ): Promise<any> {
+    try {
+      const { systemPrompt, firstMessage } = await this.generateQualificationScript(
+        campaignName,
+        qualificationFields,
+        winningCriteria
+      );
+
+      const updateData = {
+        model: {
+          provider: 'openai',
+          model: 'gpt-4',
+          systemPrompt
+        },
+        firstMessage,
+        recordingEnabled: true,
+        endCallFunctionEnabled: true
+      };
+
+      const response = await this.client.patch(`/assistant/${assistantId}`, updateData);
+      
+      console.log('✅ Updated assistant with qualification script');
+      return response.data;
+    } catch (error) {
+      console.error('Error updating assistant with qualification:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Analyze assistant script coverage of qualification fields
+   */
+  async analyzeScriptCoverage(
+    assistantId: string,
+    qualificationFields: QualificationField[]
+  ): Promise<{
+    coveredFields: string[];
+    missingFields: string[];
+    coverageScore: number;
+    recommendations: string[];
+  }> {
+    try {
+      // Get assistant details
+      const response = await this.client.get(`/assistant/${assistantId}`);
+      const assistant = response.data;
+      const systemPrompt = assistant.model?.systemPrompt || '';
+      
+      const coveredFields: string[] = [];
+      const missingFields: string[] = [];
+      const recommendations: string[] = [];
+
+      // Check each field for coverage
+      qualificationFields.forEach(field => {
+        const hints = field.ai_detection_hints || [];
+        const isCovered = hints.some(hint => 
+          systemPrompt.toLowerCase().includes(hint.toLowerCase())
+        );
+
+        if (isCovered) {
+          coveredFields.push(field.field_key);
+        } else {
+          missingFields.push(field.field_key);
+          
+          if (field.is_required) {
+            recommendations.push(
+              `Add questions about ${field.field_name} - this is a required field`
+            );
+          } else if (field.scoring_weight >= 70) {
+            recommendations.push(
+              `Consider adding ${field.field_name} questions - high scoring field (${field.scoring_weight}%)`
+            );
+          }
+        }
+      });
+
+      const coverageScore = (coveredFields.length / qualificationFields.length) * 100;
+
+      return {
+        coveredFields,
+        missingFields,
+        coverageScore: Math.round(coverageScore),
+        recommendations
+      };
+    } catch (error) {
+      console.error('Error analyzing script coverage:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get assistant details
+   */
+  async getAssistant(assistantId: string): Promise<VAPIAssistant> {
+    try {
+      const response = await this.client.get(`/assistant/${assistantId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting assistant:', error);
+      throw error;
+    }
+  }
+
   async getVAPICredentials(organizationId: string): Promise<VAPICredentials | null> {
     try {
       console.log('🔍 Fetching VAPI credentials for organization:', organizationId);
@@ -713,7 +1028,7 @@ export class VAPIIntegrationService {
       console.log('🔄 Checking organizations table for VAPI credentials...');
       const { data: organization, error: orgError } = await supabase
         .from('organizations')
-        .select('settings, vapi_api_key, vapi_settings')
+        .select('settings, vapi_api_key, vapi_private_key, vapi_settings')
         .eq('id', organizationId)
         .single();
 
@@ -736,14 +1051,15 @@ export class VAPIIntegrationService {
           }
         }
         // Finally, try individual columns
-        else if (organization.vapi_api_key) {
+        else if (organization.vapi_private_key || organization.vapi_api_key) {
           vapiSettings = {
-            apiKey: organization.vapi_api_key,
-            privateKey: organization.vapi_api_key,
+            apiKey: organization.vapi_private_key || organization.vapi_api_key, // Use private key for API
+            privateKey: organization.vapi_private_key || organization.vapi_api_key,
+            publicKey: organization.vapi_api_key, // Public key stored in vapi_api_key
             webhookUrl: 'https://api.apexai.com/webhooks/vapi',
             enabled: true
           };
-          console.log('✅ Found VAPI credentials in organizations.vapi_api_key');
+          console.log('✅ Found VAPI credentials in organizations columns - using vapi_private_key for API');
         }
 
         if (vapiSettings && vapiSettings.apiKey) {
