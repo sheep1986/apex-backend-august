@@ -396,4 +396,4 @@ router.get('/status', async (req: Request, res: Response) => {
   });
 });
 
-export default router;
+export default router;// Force Railway deployment - Sat Aug  9 15:35:43 CEST 2025
