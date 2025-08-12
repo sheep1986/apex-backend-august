@@ -174,22 +174,6 @@ async function processWebhookAsync(payload: any, receivedAt: string): Promise<vo
 async function isDuplicateEvent(eventId: string, type: string, callId: string): Promise<boolean> {
   if (!eventId && !callId) return false;
 
-  // For call-started events, also check if the call already exists
-  if (type === 'call-started' && callId) {
-    const { data: existingCall } = await supabaseService
-      .from('calls')
-      .select('id, status')
-      .eq('vapi_call_id', callId)
-      .single();
-    
-    if (existingCall) {
-      console.log(`ℹ️ Call ${callId} already exists with status: ${existingCall.status}`);
-      // If call exists and is not failed, consider it a duplicate
-      return existingCall.status !== 'failed';
-    }
-  }
-
-  // Check webhook logs for duplicate events
   const { data } = await supabaseService
     .from('webhook_logs')
     .select('id')
@@ -208,53 +192,24 @@ async function handleCallStarted(call: any, organizationId: string | null): Prom
 
   console.log(`📞 Call started: ${call.id}`);
 
-  // First check if call already exists
-  const { data: existingCall } = await supabaseService
+  // Create or update call record
+  const { error } = await supabaseService
     .from('calls')
-    .select('id')
-    .eq('vapi_call_id', call.id)
-    .single();
+    .upsert({
+      id: call.id,
+      vapi_call_id: call.id,
+      organization_id: organizationId,
+      status: 'in_progress',
+      started_at: call.startedAt || new Date().toISOString(),
+      phone_number: call.phoneNumber || call.customer?.number,
+      assistant_id: call.assistantId,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'vapi_call_id'
+    });
 
-  if (existingCall) {
-    console.log(`ℹ️ Call already exists, updating: ${call.id}`);
-    // Update existing call
-    const { error } = await supabaseService
-      .from('calls')
-      .update({
-        status: 'in_progress',
-        started_at: call.startedAt || new Date().toISOString(),
-        phone_number: call.phoneNumber || call.customer?.number,
-        assistant_id: call.assistantId,
-        updated_at: new Date().toISOString()
-      })
-      .eq('vapi_call_id', call.id);
-
-    if (error) {
-      console.error('❌ Error updating call-started:', error);
-    }
-  } else {
-    // Create new call record with unique ID
-    const { error } = await supabaseService
-      .from('calls')
-      .insert({
-        vapi_call_id: call.id,
-        organization_id: organizationId,
-        status: 'in_progress',
-        started_at: call.startedAt || new Date().toISOString(),
-        phone_number: call.phoneNumber || call.customer?.number,
-        customer_phone: call.customer?.number || call.phoneNumber,
-        assistant_id: call.assistantId,
-        campaign_id: call.metadata?.campaignId || null,
-        lead_id: call.metadata?.leadId || null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      });
-
-    if (error) {
-      console.error('❌ Error creating call-started:', error);
-    } else {
-      console.log(`✅ New call created: ${call.id}`);
-    }
+  if (error) {
+    console.error('❌ Error updating call-started:', error);
   }
 }
 
@@ -441,4 +396,4 @@ router.get('/status', async (req: Request, res: Response) => {
   });
 });
 
-export default router;// Force Railway deployment - Sat Aug  9 15:35:43 CEST 2025
+export default router;

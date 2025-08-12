@@ -1,0 +1,4 @@
+Deploy trigger file - Railway deployment
+Last updated: 2025-08-12 11:24:00
+CORS fix version: 1.1.0
+Critical fix for all API endpoints

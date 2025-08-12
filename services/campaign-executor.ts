@@ -66,8 +66,59 @@ export class CampaignExecutor {
   private vapiServiceCache = new Map<string, VapiService | null>();
 
   constructor() {
-    // Start the campaign scheduler
+    // Don't auto-start in constructor to ensure proper initialization order
+    console.log('📦 Campaign Executor instance created');
+  }
+
+  /**
+   * Public method to start the campaign executor
+   */
+  public start() {
+    console.log('🎯 Starting Campaign Executor...');
     this.startScheduler();
+    this.startCleanupScheduler();
+  }
+
+  /**
+   * Start cleanup scheduler for stuck calls
+   */
+  private startCleanupScheduler() {
+    console.log('🧹 Starting stuck call cleanup scheduler...');
+    
+    // Run cleanup every 10 minutes
+    setInterval(async () => {
+      await this.cleanupStuckCalls();
+    }, 10 * 60 * 1000);
+    
+    // Also run cleanup on startup after 30 seconds
+    setTimeout(() => this.cleanupStuckCalls(), 30000);
+  }
+
+  /**
+   * Clean up stuck calls that have been in progress too long
+   */
+  private async cleanupStuckCalls(): Promise<void> {
+    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+    
+    const { data: stuckCalls, error } = await supabase
+      .from('calls')
+      .update({
+        status: 'failed',
+        end_reason: 'timeout',
+        updated_at: new Date().toISOString()
+      })
+      .eq('status', 'in_progress')
+      .lt('created_at', thirtyMinutesAgo)
+      .select();
+    
+    if (error) {
+      console.error('❌ Error cleaning up stuck calls:', error);
+      return;
+    }
+    
+    if (stuckCalls && stuckCalls.length > 0) {
+      console.log(`🧹 Cleaned up ${stuckCalls.length} stuck calls`);
+    }
   }
 
   /**
@@ -75,10 +126,11 @@ export class CampaignExecutor {
    * Runs every minute to check for campaigns that need processing
    */
   private startScheduler() {
-    console.log('🚀 Campaign Executor started');
+    console.log('🚀 Campaign Executor scheduler initializing...');
     
     // Run every minute
-    cron.schedule('* * * * *', async () => {
+    const task = cron.schedule('* * * * *', async () => {
+      console.log(`⏰ Campaign executor cron triggered at ${new Date().toISOString()}`);
       if (!this.isRunning) {
         this.isRunning = true;
         try {
@@ -88,11 +140,18 @@ export class CampaignExecutor {
         } finally {
           this.isRunning = false;
         }
+      } else {
+        console.log('⏭️ Skipping - campaign executor already running');
       }
     });
 
-    // Also run immediately on startup
-    setTimeout(() => this.processCampaigns(), 5000);
+    console.log('✅ Campaign Executor cron job scheduled successfully');
+
+    // Also run immediately on startup (after 5 seconds)
+    setTimeout(() => {
+      console.log('🏃 Running initial campaign check...');
+      this.processCampaigns();
+    }, 5000);
   }
 
   /**
@@ -172,6 +231,30 @@ export class CampaignExecutor {
   private async processCampaign(campaign: CampaignSettings) {
     const now = new Date();
     
+    // Add lock check to prevent duplicate processing
+    const lockKey = `campaign_lock_${campaign.id}`;
+    const { data: existingLock } = await supabase
+      .from('campaign_locks')
+      .select('*')
+      .eq('campaign_id', campaign.id)
+      .gte('expires_at', now.toISOString())
+      .single();
+    
+    if (existingLock) {
+      console.log(`⏭️ Campaign ${campaign.id} is already being processed`);
+      return;
+    }
+    
+    // Create a lock for this campaign (expires in 2 minutes)
+    const lockExpiry = new Date(now.getTime() + 2 * 60 * 1000);
+    await supabase
+      .from('campaign_locks')
+      .upsert({
+        campaign_id: campaign.id,
+        locked_at: now.toISOString(),
+        expires_at: lockExpiry.toISOString()
+      });
+    
     // Check if campaign should start (for scheduled campaigns)
     if (campaign.status === 'scheduled') {
       if (!campaign.scheduledStart || new Date(campaign.scheduledStart) > now) {
@@ -213,6 +296,12 @@ export class CampaignExecutor {
     // Make the calls
     for (const queuedCall of callsToMake) {
       try {
+        // Check if call is already in progress for this lead
+        if (await this.isCallInProgress(queuedCall.contactId || '', queuedCall.phoneNumber)) {
+          console.log(`⏭️ Call already in progress for ${queuedCall.phoneNumber}`);
+          continue;
+        }
+        
         await this.makeCall(campaign, queuedCall);
         // Add small delay between calls to avoid overwhelming VAPI
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -268,6 +357,20 @@ export class CampaignExecutor {
     const endTime = campaign.workingHours.end;
 
     return currentTime >= startTime && currentTime <= endTime;
+  }
+
+  /**
+   * Check if call is already in progress for a lead
+   */
+  private async isCallInProgress(leadId: string, phoneNumber: string): Promise<boolean> {
+    const { data: existingCalls } = await supabase
+      .from('calls')
+      .select('id, status')
+      .or(`lead_id.eq.${leadId},customer_phone.eq.${phoneNumber}`)
+      .in('status', ['in_progress', 'queued', 'ringing'])
+      .gte('created_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()); // Last hour
+    
+    return !!(existingCalls && existingCalls.length > 0);
   }
 
   /**
