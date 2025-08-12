@@ -50,12 +50,18 @@ config();
 const app = express();
 const PORT = process.env['PORT'] || 3001;
 
+// Trust proxy - Required for Railway/Heroku/etc to properly handle X-Forwarded-For
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet());
-app.use(cors({
+
+// CORS configuration - properly use CORS_ORIGIN environment variable
+const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests from these origins
+    // Build allowed origins list
     const allowedOrigins = [
+      // Development origins
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:5175',
@@ -67,20 +73,36 @@ app.use(cors({
       'http://localhost:5522',
       'http://localhost:3000',
       'http://localhost:8080',
-      process.env['FRONTEND_URL']
-    ].filter(Boolean);
+      // Production origins from environment variables
+      process.env['CORS_ORIGIN'],
+      process.env['FRONTEND_URL'],
+      // Hardcoded Netlify URL as fallback
+      'https://cheery-hamster-593ff7.netlify.app'
+    ].filter(Boolean); // Remove any undefined values
+    
+    console.log('CORS check - Origin:', origin);
+    console.log('CORS check - Allowed origins:', allowedOrigins);
+    console.log('CORS_ORIGIN env:', process.env['CORS_ORIGIN']);
     
     // Allow requests with no origin (like mobile apps or Postman)
     if (!origin) return callback(null, true);
     
+    // Check if origin is allowed
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.error('CORS blocked origin:', origin);
+      callback(new Error(`CORS policy: Origin ${origin} not allowed`));
     }
   },
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -108,7 +130,12 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
+    cors: {
+      configured: true,
+      cors_origin: process.env['CORS_ORIGIN'] || 'not set',
+      frontend_url: process.env['FRONTEND_URL'] || 'not set'
+    }
   });
 });
 
@@ -319,7 +346,7 @@ app.listen(PORT, () => {
   
   // Start campaign automation system
   console.log('🎯 Starting campaign automation system...');
-  // The campaign executor starts automatically when imported
+  campaignExecutor.start();
   
   console.log('🧹 Starting call cleanup service...');
   callCleanupService.start();
