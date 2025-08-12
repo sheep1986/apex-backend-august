@@ -49,6 +49,7 @@ config();
 
 const app = express();
 const PORT = process.env['PORT'] || 3001;
+console.log('🚀 Starting server with CORS_ORIGIN:', process.env['CORS_ORIGIN']);
 
 // Trust proxy - Required for Railway/Heroku/etc to properly handle X-Forwarded-For
 app.set('trust proxy', true);
