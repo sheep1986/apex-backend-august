@@ -57,53 +57,72 @@ app.set('trust proxy', true);
 // Security middleware
 app.use(helmet());
 
-// CORS configuration - properly use CORS_ORIGIN environment variable
+// COMPREHENSIVE CORS configuration for ALL endpoints
+const allowedOrigins = [
+  // Development origins
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
+  'http://localhost:5177',
+  'http://localhost:5178',
+  'http://localhost:5179',
+  'http://localhost:5180',
+  'http://localhost:5522',
+  'http://localhost:3000',
+  'http://localhost:8080',
+  // Production origins
+  process.env['CORS_ORIGIN'],
+  process.env['FRONTEND_URL'],
+  'https://cheery-hamster-593ff7.netlify.app'
+].filter(Boolean); // Remove any undefined values
+
 const corsOptions = {
   origin: (origin, callback) => {
-    // Build allowed origins list
-    const allowedOrigins = [
-      // Development origins
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175',
-      'http://localhost:5176',
-      'http://localhost:5177',
-      'http://localhost:5178',
-      'http://localhost:5179',
-      'http://localhost:5180',
-      'http://localhost:5522',
-      'http://localhost:3000',
-      'http://localhost:8080',
-      // Production origins from environment variables
-      process.env['CORS_ORIGIN'],
-      process.env['FRONTEND_URL'],
-      // Hardcoded Netlify URL as fallback
-      'https://cheery-hamster-593ff7.netlify.app'
-    ].filter(Boolean); // Remove any undefined values
+    console.log('🔍 CORS check - Request origin:', origin);
     
-    console.log('CORS check - Origin:', origin);
-    console.log('CORS check - Allowed origins:', allowedOrigins);
-    console.log('CORS_ORIGIN env:', process.env['CORS_ORIGIN']);
-    
-    // Allow requests with no origin (like mobile apps or Postman)
+    // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
     if (!origin) return callback(null, true);
     
     // Check if origin is allowed
     if (allowedOrigins.includes(origin)) {
+      console.log('✅ CORS allowed for origin:', origin);
       callback(null, true);
     } else {
-      console.error('CORS blocked origin:', origin);
+      console.error('❌ CORS blocked origin:', origin);
+      console.log('Allowed origins:', allowedOrigins);
       callback(new Error(`CORS policy: Origin ${origin} not allowed`));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'Access-Control-Request-Method',
+    'Access-Control-Request-Headers'
+  ],
+  exposedHeaders: ['Content-Length', 'Content-Range', 'X-Content-Range'],
+  maxAge: 86400, // 24 hours
   preflightContinue: false,
   optionsSuccessStatus: 204
 };
 
+// Apply CORS to ALL routes globally
 app.use(cors(corsOptions));
+
+// Handle preflight requests for ALL routes explicitly
+app.options('*', cors(corsOptions));
+
+// Additional explicit CORS for specific API route groups (belt and suspenders approach)
+app.use('/api/calls', cors(corsOptions));
+app.use('/api/vapi-outbound', cors(corsOptions));
+app.use('/api/vapi-data', cors(corsOptions));
+app.use('/api/campaigns', cors(corsOptions));
+app.use('/api/organization-settings', cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -131,7 +150,7 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
-    version: '1.0.1',
+    version: '1.1.0',
     cors: {
       configured: true,
       cors_origin: process.env['CORS_ORIGIN'] || 'not set',
