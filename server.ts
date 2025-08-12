@@ -54,12 +54,10 @@ console.log('🚀 Starting server with CORS_ORIGIN:', process.env['CORS_ORIGIN']
 // Trust proxy - Required for Railway/Heroku/etc to properly handle X-Forwarded-For
 app.set('trust proxy', true);
 
-// Security middleware
-app.use(helmet());
-
-// COMPREHENSIVE CORS configuration for ALL endpoints
-const allowedOrigins = [
-  // Development origins
+// CRITICAL: CORS MUST BE FIRST - BEFORE ANY OTHER MIDDLEWARE
+// Bulletproof CORS configuration
+const allowedOrigins = new Set([
+  'https://cheery-hamster-593ff7.netlify.app',
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
@@ -70,69 +68,64 @@ const allowedOrigins = [
   'http://localhost:5180',
   'http://localhost:5522',
   'http://localhost:3000',
-  'http://localhost:8080',
-  // Production origins
-  process.env['CORS_ORIGIN'],
-  process.env['FRONTEND_URL'],
-  'https://cheery-hamster-593ff7.netlify.app',
-  // Add Netlify preview deploys support
-  'https://*.netlify.app'
-].filter(Boolean); // Remove any undefined values
+  'http://localhost:8080'
+]);
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    console.log('🔍 CORS check - Request origin:', origin);
-    
-    // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
-    if (!origin) return callback(null, true);
-    
-    // Check exact match first
-    if (allowedOrigins.includes(origin)) {
-      console.log('✅ CORS allowed for origin:', origin);
-      return callback(null, true);
-    }
-    
+// Add environment-based origins if they exist
+if (process.env['CORS_ORIGIN']) allowedOrigins.add(process.env['CORS_ORIGIN']);
+if (process.env['FRONTEND_URL']) allowedOrigins.add(process.env['FRONTEND_URL']);
+
+// Custom CORS middleware - handles everything including errors
+app.use((req, res, next) => {
+  const origin = req.headers.origin as string | undefined;
+  
+  // Log for debugging
+  console.log(`🔍 CORS: ${req.method} ${req.path} from origin: ${origin || 'no-origin'}`);
+  
+  // Check if origin is allowed
+  if (origin) {
+    // Check exact match
+    if (allowedOrigins.has(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Credentials', 'true');
+      console.log('✅ CORS allowed for:', origin);
+    } 
     // Check for Netlify preview deploys
-    if (origin.endsWith('.netlify.app')) {
+    else if (origin.endsWith('.netlify.app')) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Credentials', 'true');
       console.log('✅ CORS allowed for Netlify preview:', origin);
-      return callback(null, true);
     }
-    
-    console.error('❌ CORS blocked origin:', origin);
-    console.log('Allowed origins:', allowedOrigins);
-    callback(new Error(`CORS policy: Origin ${origin} not allowed`));
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Request-Method',
-    'Access-Control-Request-Headers',
-    'X-Org-Id', // Add any custom headers your app uses
-    'X-User-Id'
-  ],
-  exposedHeaders: ['Content-Length', 'Content-Range', 'X-Content-Range'],
-  maxAge: 86400, // 24 hours
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-};
+    // No match - don't set CORS headers (will cause browser to block)
+    else {
+      console.log('❌ CORS blocked for:', origin);
+    }
+  } else {
+    // No origin (server-to-server) - allow
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+  
+  // Always set these headers
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD');
+  res.header('Access-Control-Allow-Headers', 'Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,X-Org-Id,X-User-Id');
+  res.header('Access-Control-Expose-Headers', 'Content-Length,Content-Range,X-Content-Range');
+  res.header('Access-Control-Max-Age', '86400');
+  res.header('Vary', 'Origin');
+  
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    console.log('✅ Preflight OPTIONS request handled');
+    return res.status(204).end();
+  }
+  
+  next();
+});
 
-// CRITICAL: Handle OPTIONS preflight BEFORE any auth middleware
-app.options('*', cors(corsOptions));
-
-// Apply CORS to ALL routes globally
-app.use(cors(corsOptions));
-
-// Additional explicit CORS for specific API route groups (belt and suspenders approach)
-app.use('/api/calls', cors(corsOptions));
-app.use('/api/vapi-outbound', cors(corsOptions));
-app.use('/api/vapi-data', cors(corsOptions));
-app.use('/api/campaigns', cors(corsOptions));
-app.use('/api/organization-settings', cors(corsOptions));
+// Security middleware (AFTER CORS)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -160,12 +153,13 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
-    version: '1.2.0',
+    version: '1.3.0',
     cors: {
       configured: true,
       cors_origin: process.env['CORS_ORIGIN'] || 'not set',
       frontend_url: process.env['FRONTEND_URL'] || 'not set',
-      netlify_allowed: true
+      netlify_allowed: true,
+      bulletproof: true
     }
   });
 });
@@ -364,9 +358,18 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// 404 handler
+// 404 handler (CORS headers already set by middleware above)
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
+});
+
+// Global error handler (CORS headers already set by middleware above)
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('❌ Server error:', err);
+  res.status(err.status || 500).json({ 
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+  });
 });
 
 // Start server
