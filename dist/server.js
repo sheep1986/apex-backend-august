@@ -65,6 +65,7 @@ const organization_settings_1 = __importDefault(require("./api/organization-sett
 const appointments_1 = __importDefault(require("./api/appointments"));
 const platform_monitoring_1 = __importDefault(require("./api/platform-monitoring"));
 const clerk_auth_1 = require("./middleware/clerk-auth");
+const campaign_executor_1 = require("./services/campaign-executor");
 const call_cleanup_service_1 = require("./services/call-cleanup-service");
 const apiConfigurationsController = __importStar(require("./api/api-configurations"));
 const vapi_auto_setup_1 = require("./api/vapi-auto-setup");
@@ -72,34 +73,63 @@ const raw_body_1 = require("./middleware/raw-body");
 (0, dotenv_1.config)();
 const app = (0, express_1.default)();
 const PORT = process.env['PORT'] || 3001;
+console.log('🚀 Starting server with CORS_ORIGIN:', process.env['CORS_ORIGIN']);
+app.set('trust proxy', true);
 app.use((0, helmet_1.default)());
-app.use((0, cors_1.default)({
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://localhost:5176',
+    'http://localhost:5177',
+    'http://localhost:5178',
+    'http://localhost:5179',
+    'http://localhost:5180',
+    'http://localhost:5522',
+    'http://localhost:3000',
+    'http://localhost:8080',
+    process.env['CORS_ORIGIN'],
+    process.env['FRONTEND_URL'],
+    'https://cheery-hamster-593ff7.netlify.app'
+].filter(Boolean);
+const corsOptions = {
     origin: (origin, callback) => {
-        const allowedOrigins = [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            'http://localhost:5175',
-            'http://localhost:5176',
-            'http://localhost:5177',
-            'http://localhost:5178',
-            'http://localhost:5179',
-            'http://localhost:5180',
-            'http://localhost:5522',
-            'http://localhost:3000',
-            'http://localhost:8080',
-            process.env['FRONTEND_URL']
-        ].filter(Boolean);
+        console.log('🔍 CORS check - Request origin:', origin);
         if (!origin)
             return callback(null, true);
         if (allowedOrigins.includes(origin)) {
+            console.log('✅ CORS allowed for origin:', origin);
             callback(null, true);
         }
         else {
-            callback(new Error('Not allowed by CORS'));
+            console.error('❌ CORS blocked origin:', origin);
+            console.log('Allowed origins:', allowedOrigins);
+            callback(new Error(`CORS policy: Origin ${origin} not allowed`));
         }
     },
-    credentials: true
-}));
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Accept',
+        'Origin',
+        'Access-Control-Request-Method',
+        'Access-Control-Request-Headers'
+    ],
+    exposedHeaders: ['Content-Length', 'Content-Range', 'X-Content-Range'],
+    maxAge: 86400,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+};
+app.use((0, cors_1.default)(corsOptions));
+app.options('*', (0, cors_1.default)(corsOptions));
+app.use('/api/calls', (0, cors_1.default)(corsOptions));
+app.use('/api/vapi-outbound', (0, cors_1.default)(corsOptions));
+app.use('/api/vapi-data', (0, cors_1.default)(corsOptions));
+app.use('/api/campaigns', (0, cors_1.default)(corsOptions));
+app.use('/api/organization-settings', (0, cors_1.default)(corsOptions));
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
     max: process.env.NODE_ENV === 'development' ? 1000 : 100,
@@ -117,7 +147,12 @@ app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.1.0',
+        cors: {
+            configured: true,
+            cors_origin: process.env['CORS_ORIGIN'] || 'not set',
+            frontend_url: process.env['FRONTEND_URL'] || 'not set'
+        }
     });
 });
 app.post('/api/public/users', async (req, res) => {
@@ -279,6 +314,7 @@ app.listen(PORT, () => {
     console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
     console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
     console.log('🎯 Starting campaign automation system...');
+    campaign_executor_1.campaignExecutor.start();
     console.log('🧹 Starting call cleanup service...');
     call_cleanup_service_1.callCleanupService.start();
 });

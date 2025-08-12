@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const clerk_auth_1 = require("../middleware/clerk-auth");
 const vapi_integration_service_1 = require("../services/vapi-integration-service");
+const supabase_1 = require("../services/supabase");
 const router = (0, express_1.Router)();
 router.use(clerk_auth_1.authenticateUser);
 router.get('/assistants', async (req, res) => {
@@ -48,17 +49,45 @@ router.get('/phone-numbers', async (req, res) => {
                 phoneNumbers: []
             });
         }
-        console.log('📱 Fetching VAPI phone numbers for organization:', organizationId);
-        const vapiService = await vapi_integration_service_1.VAPIIntegrationService.forOrganization(organizationId);
-        if (!vapiService) {
-            console.log('⚠️ No VAPI service available for organization');
-            return res.json({
-                phoneNumbers: [],
-                message: 'VAPI integration not configured. Please add your VAPI API key in Organization Settings.',
-                requiresConfiguration: true
-            });
+        console.log('📱 Fetching phone numbers for organization:', organizationId);
+        let phoneNumbers = [];
+        try {
+            const { data: dbPhoneNumbers, error } = await supabase_1.supabase
+                .from('phone_numbers')
+                .select('*')
+                .eq('organization_id', organizationId);
+            if (!error && dbPhoneNumbers && dbPhoneNumbers.length > 0) {
+                console.log(`✅ Found ${dbPhoneNumbers.length} phone numbers in database`);
+                phoneNumbers = dbPhoneNumbers.map(phone => ({
+                    id: phone.id,
+                    number: phone.number,
+                    provider: phone.provider || 'vapi',
+                    country: phone.country_code || 'US',
+                    name: phone.number,
+                    status: phone.status
+                }));
+            }
+            else {
+                console.log('📡 No phone numbers in database, trying VAPI API...');
+                const vapiService = await vapi_integration_service_1.VAPIIntegrationService.forOrganization(organizationId);
+                if (!vapiService) {
+                    console.log('⚠️ No VAPI service available for organization');
+                    return res.json({
+                        phoneNumbers: [],
+                        message: 'VAPI integration not configured. Please add your VAPI API key in Organization Settings.',
+                        requiresConfiguration: true
+                    });
+                }
+                phoneNumbers = await vapiService.getPhoneNumbers();
+            }
         }
-        const phoneNumbers = await vapiService.getPhoneNumbers();
+        catch (error) {
+            console.error('Error fetching from database, trying VAPI:', error);
+            const vapiService = await vapi_integration_service_1.VAPIIntegrationService.forOrganization(organizationId);
+            if (vapiService) {
+                phoneNumbers = await vapiService.getPhoneNumbers();
+            }
+        }
         console.log(`✅ Retrieved ${phoneNumbers.length} phone numbers from VAPI`);
         res.json({
             phoneNumbers,

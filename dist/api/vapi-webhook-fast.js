@@ -122,17 +122,6 @@ async function processWebhookAsync(payload, receivedAt) {
 async function isDuplicateEvent(eventId, type, callId) {
     if (!eventId && !callId)
         return false;
-    if (type === 'call-started' && callId) {
-        const { data: existingCall } = await supabase_client_1.default
-            .from('calls')
-            .select('id, status')
-            .eq('vapi_call_id', callId)
-            .single();
-        if (existingCall) {
-            console.log(`ℹ️ Call ${callId} already exists with status: ${existingCall.status}`);
-            return existingCall.status !== 'failed';
-        }
-    }
     const { data } = await supabase_client_1.default
         .from('webhook_logs')
         .select('id')
@@ -145,49 +134,22 @@ async function handleCallStarted(call, organizationId) {
     if (!call?.id)
         return;
     console.log(`📞 Call started: ${call.id}`);
-    const { data: existingCall } = await supabase_client_1.default
+    const { error } = await supabase_client_1.default
         .from('calls')
-        .select('id')
-        .eq('vapi_call_id', call.id)
-        .single();
-    if (existingCall) {
-        console.log(`ℹ️ Call already exists, updating: ${call.id}`);
-        const { error } = await supabase_client_1.default
-            .from('calls')
-            .update({
-            status: 'in_progress',
-            started_at: call.startedAt || new Date().toISOString(),
-            phone_number: call.phoneNumber || call.customer?.number,
-            assistant_id: call.assistantId,
-            updated_at: new Date().toISOString()
-        })
-            .eq('vapi_call_id', call.id);
-        if (error) {
-            console.error('❌ Error updating call-started:', error);
-        }
-    }
-    else {
-        const { error } = await supabase_client_1.default
-            .from('calls')
-            .insert({
-            vapi_call_id: call.id,
-            organization_id: organizationId,
-            status: 'in_progress',
-            started_at: call.startedAt || new Date().toISOString(),
-            phone_number: call.phoneNumber || call.customer?.number,
-            customer_phone: call.customer?.number || call.phoneNumber,
-            assistant_id: call.assistantId,
-            campaign_id: call.metadata?.campaignId || null,
-            lead_id: call.metadata?.leadId || null,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-        });
-        if (error) {
-            console.error('❌ Error creating call-started:', error);
-        }
-        else {
-            console.log(`✅ New call created: ${call.id}`);
-        }
+        .upsert({
+        id: call.id,
+        vapi_call_id: call.id,
+        organization_id: organizationId,
+        status: 'in_progress',
+        started_at: call.startedAt || new Date().toISOString(),
+        phone_number: call.phoneNumber || call.customer?.number,
+        assistant_id: call.assistantId,
+        updated_at: new Date().toISOString()
+    }, {
+        onConflict: 'vapi_call_id'
+    });
+    if (error) {
+        console.error('❌ Error updating call-started:', error);
     }
 }
 async function handleCallEnded(call, organizationId) {
