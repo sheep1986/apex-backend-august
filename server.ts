@@ -74,7 +74,9 @@ const allowedOrigins = [
   // Production origins
   process.env['CORS_ORIGIN'],
   process.env['FRONTEND_URL'],
-  'https://cheery-hamster-593ff7.netlify.app'
+  'https://cheery-hamster-593ff7.netlify.app',
+  // Add Netlify preview deploys support
+  'https://*.netlify.app'
 ].filter(Boolean); // Remove any undefined values
 
 const corsOptions = {
@@ -84,15 +86,21 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
     if (!origin) return callback(null, true);
     
-    // Check if origin is allowed
+    // Check exact match first
     if (allowedOrigins.includes(origin)) {
       console.log('✅ CORS allowed for origin:', origin);
-      callback(null, true);
-    } else {
-      console.error('❌ CORS blocked origin:', origin);
-      console.log('Allowed origins:', allowedOrigins);
-      callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+      return callback(null, true);
     }
+    
+    // Check for Netlify preview deploys
+    if (origin.endsWith('.netlify.app')) {
+      console.log('✅ CORS allowed for Netlify preview:', origin);
+      return callback(null, true);
+    }
+    
+    console.error('❌ CORS blocked origin:', origin);
+    console.log('Allowed origins:', allowedOrigins);
+    callback(new Error(`CORS policy: Origin ${origin} not allowed`));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD'],
@@ -103,7 +111,9 @@ const corsOptions = {
     'Accept',
     'Origin',
     'Access-Control-Request-Method',
-    'Access-Control-Request-Headers'
+    'Access-Control-Request-Headers',
+    'X-Org-Id', // Add any custom headers your app uses
+    'X-User-Id'
   ],
   exposedHeaders: ['Content-Length', 'Content-Range', 'X-Content-Range'],
   maxAge: 86400, // 24 hours
@@ -111,11 +121,11 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
+// CRITICAL: Handle OPTIONS preflight BEFORE any auth middleware
+app.options('*', cors(corsOptions));
+
 // Apply CORS to ALL routes globally
 app.use(cors(corsOptions));
-
-// Handle preflight requests for ALL routes explicitly
-app.options('*', cors(corsOptions));
 
 // Additional explicit CORS for specific API route groups (belt and suspenders approach)
 app.use('/api/calls', cors(corsOptions));
@@ -150,11 +160,12 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
-    version: '1.1.0',
+    version: '1.2.0',
     cors: {
       configured: true,
       cors_origin: process.env['CORS_ORIGIN'] || 'not set',
-      frontend_url: process.env['FRONTEND_URL'] || 'not set'
+      frontend_url: process.env['FRONTEND_URL'] || 'not set',
+      netlify_allowed: true
     }
   });
 });

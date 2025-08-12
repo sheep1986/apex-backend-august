@@ -35,6 +35,11 @@ export const authenticateClerkUser = async (
   res: Response,
   next: NextFunction
 ) => {
+  // Skip authentication for OPTIONS preflight requests
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+  
   try {
     const authHeader = req.headers.authorization;
     
