@@ -4,7 +4,7 @@
   "description": "Backend API server for Apex AI Calling Platform",
   "main": "dist/server.js",
   "scripts": {
-    "build": "echo 'Using existing build'",
+    "build": "tsc",
     "start": "node start-production.js",
     "start:compiled": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
