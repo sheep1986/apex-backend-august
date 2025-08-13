@@ -1,7 +1,13 @@
 import { Router, Response } from 'express';
 import { AuthenticatedRequest, authenticateUser } from '../middleware/clerk-auth';
 import { VAPIIntegrationService } from '../services/vapi-integration-service';
-import { supabase } from '../services/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Create supabase client directly if module not found
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const router = Router();
 
