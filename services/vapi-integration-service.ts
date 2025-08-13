@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import supabase from './supabase-client';
+import supabase from './supabase';
 
 interface VAPIConfig {
   apiKey: string;
