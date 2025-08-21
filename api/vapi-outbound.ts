@@ -1326,4 +1326,56 @@ router.post('/simulate-calls', async (req: AuthenticatedRequest, res: Response) 
   }
 });
 
+// Proxy endpoint for VAPI recordings to bypass CORS
+router.get('/recording-proxy', async (req, res) => {
+  try {
+    const { url } = req.query;
+    
+    if (!url || typeof url !== 'string') {
+      return res.status(400).json({ error: 'Recording URL is required' });
+    }
+
+    // Validate it's a VAPI recording URL
+    if (!url.includes('vapi.ai') && !url.includes('vapi-public-recordings')) {
+      return res.status(400).json({ error: 'Invalid recording URL' });
+    }
+
+    console.log('🎵 Proxying recording from:', url);
+
+    // Fetch the recording from VAPI
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      console.error('❌ Failed to fetch recording:', response.status, response.statusText);
+      return res.status(response.status).json({ 
+        error: 'Failed to fetch recording',
+        status: response.status 
+      });
+    }
+
+    // Get the content type from the original response
+    const contentType = response.headers.get('content-type') || 'audio/mpeg';
+    const contentLength = response.headers.get('content-length');
+
+    // Set appropriate headers for audio streaming
+    res.setHeader('Content-Type', contentType);
+    if (contentLength) {
+      res.setHeader('Content-Length', contentLength);
+    }
+    res.setHeader('Accept-Ranges', 'bytes');
+    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+
+    // Stream the audio data
+    const buffer = await response.arrayBuffer();
+    res.send(Buffer.from(buffer));
+
+  } catch (error) {
+    console.error('❌ Error proxying recording:', error);
+    res.status(500).json({ 
+      error: 'Failed to proxy recording',
+      message: error.message 
+    });
+  }
+});
+
 export default router; 

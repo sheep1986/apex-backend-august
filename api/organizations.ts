@@ -198,7 +198,7 @@ router.post('/', async (req: AuthenticatedRequest, res: Response) => {
 router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, type, plan, status } = req.body;
+    const { name, type, plan, status, vapi_api_key, vapi_private_key } = req.body;
     const userRole = req.user?.role;
 
     // Check permissions
@@ -212,6 +212,8 @@ router.put('/:id', async (req: AuthenticatedRequest, res: Response) => {
     if (type) updateData.type = type;
     if (plan) updateData.plan = plan;
     if (status) updateData.status = status;
+    if (vapi_api_key !== undefined) updateData.vapi_api_key = vapi_api_key;
+    if (vapi_private_key !== undefined) updateData.vapi_private_key = vapi_private_key;
 
     const { data: organization, error } = await supabase
       .from('organizations')
@@ -295,8 +297,9 @@ router.put('/:id/settings', async (req: AuthenticatedRequest, res: Response) => 
           settings: {
             vapi: vapiSettings
           },
-          // Also try storing in dedicated VAPI columns if they exist
-          vapi_api_key: vapiApiKey || null,
+          // Store in dedicated VAPI columns
+          vapi_api_key: vapiApiKey || null, // Public key
+          vapi_private_key: vapiPrivateKey || null, // Private key
           vapi_settings: JSON.stringify(vapiSettings),
           updated_at: new Date().toISOString()
         })

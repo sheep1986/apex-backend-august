@@ -101,7 +101,31 @@ router.post('/:key', async (req: AuthenticatedRequest, res: express.Response) =>
       return res.status(400).json({ error: 'User not associated with organization' });
     }
 
-    // Validate input
+    // Special handling for VAPI keys - update organizations table directly
+    if (key === 'vapi_api_key' || key === 'vapi_private_key') {
+      const updateData: any = {};
+      updateData[key] = value;
+      updateData.updated_at = new Date().toISOString();
+
+      const { error } = await supabase
+        .from('organizations')
+        .update(updateData)
+        .eq('id', organizationId);
+
+      if (error) {
+        console.error(`Error updating ${key}:`, error);
+        return res.status(500).json({ error: `Failed to update ${key}` });
+      }
+
+      res.json({
+        message: `${key} updated successfully`,
+        key,
+        encrypted: false
+      });
+      return;
+    }
+
+    // Validate input for other settings
     const validation = SetSettingSchema.safeParse({ key, value, encrypted });
     if (!validation.success) {
       return res.status(400).json({ 

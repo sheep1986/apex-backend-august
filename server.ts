@@ -58,6 +58,7 @@ app.set('trust proxy', true);
 // Bulletproof CORS configuration
 const allowedOrigins = new Set([
   'https://cheery-hamster-593ff7.netlify.app',
+  'https://tourmaline-hummingbird-cdcef0.netlify.app',
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175',
@@ -107,7 +108,7 @@ app.use((req, res, next) => {
   
   // Always set these headers
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD');
-  res.header('Access-Control-Allow-Headers', 'Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,X-Org-Id,X-User-Id');
+  res.header('Access-Control-Allow-Headers', 'Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,X-Org-Id,X-User-Id,X-Request-Id');
   res.header('Access-Control-Expose-Headers', 'Content-Length,Content-Range,X-Content-Range');
   res.header('Access-Control-Max-Age', '86400');
   res.header('Vary', 'Origin');
