@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { RequestWithRawBody } from '../middleware/raw-body';
 import supabaseService from '../services/supabase-client';
+import { VAPIIntegrationService } from '../services/vapi-integration-service';
 import crypto from 'crypto';
 
 const router = Router();
@@ -9,24 +10,102 @@ const router = Router();
 const processedEvents = new Set<string>();
 
 /**
- * Verify VAPI webhook signature
+ * Get organization ID from call data
+ * VAPI webhooks may include organizationId or we need to look it up from call record
  */
-function verifyVAPISignature(rawBody: string, signature?: string): boolean {
-  if (!signature || !process.env.VAPI_WEBHOOK_SECRET) {
-    console.warn('⚠️ No signature or secret configured for webhook verification');
-    return true; // Allow in development, but log warning
-  }
-
+async function getOrganizationFromCall(call: any): Promise<string | null> {
   try {
-    const expectedSignature = crypto
-      .createHmac('sha256', process.env.VAPI_WEBHOOK_SECRET)
-      .update(rawBody)
-      .digest('hex');
+    // First check if organizationId is in the webhook payload
+    if (call?.organizationId) {
+      return call.organizationId;
+    }
     
-    return crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(expectedSignature)
-    );
+    // Otherwise look up from our database using vapi_call_id
+    if (call?.id) {
+      const { data: callRecord } = await supabaseService
+        .from('calls')
+        .select('organization_id')
+        .eq('vapi_call_id', call.id)
+        .single();
+      
+      if (callRecord?.organization_id) {
+        return callRecord.organization_id;
+      }
+    }
+    
+    // If we still don't have it, try to match by phone number
+    if (call?.phoneNumber || call?.customer?.number) {
+      const phoneNumber = call.phoneNumber || call.customer?.number;
+      const { data: phoneRecord } = await supabaseService
+        .from('phone_numbers')
+        .select('organization_id')
+        .eq('phone_number', phoneNumber)
+        .single();
+      
+      if (phoneRecord?.organization_id) {
+        return phoneRecord.organization_id;
+      }
+    }
+    
+    console.warn('⚠️ Could not determine organization for webhook');
+    return null;
+  } catch (error) {
+    console.error('❌ Error getting organization from call:', error);
+    return null;
+  }
+}
+
+/**
+ * Verify VAPI webhook signature using organization's public key
+ */
+async function verifyVAPISignature(
+  rawBody: string, 
+  signature: string | undefined,
+  call: any
+): Promise<boolean> {
+  try {
+    // If no signature header, reject in production
+    if (!signature) {
+      if (process.env.NODE_ENV === 'production') {
+        console.error('❌ No signature header in production environment');
+        return false;
+      }
+      console.warn('⚠️ No signature header, allowing in development');
+      return true;
+    }
+    
+    // Get organization ID from call data
+    const organizationId = await getOrganizationFromCall(call);
+    if (!organizationId) {
+      console.error('❌ Could not determine organization for signature verification');
+      return false;
+    }
+    
+    // Get organization's public key
+    const { data: org } = await supabaseService
+      .from('organizations')
+      .select('vapi_public_key, vapi_api_key')
+      .eq('id', organizationId)
+      .single();
+    
+    const publicKey = org?.vapi_public_key || org?.vapi_api_key;
+    
+    if (!publicKey) {
+      console.error('❌ No public key configured for organization:', organizationId);
+      return false;
+    }
+    
+    // Verify signature using the VAPIIntegrationService static method
+    const isValid = VAPIIntegrationService.verifyWebhookSignature(rawBody, signature, publicKey);
+    
+    if (!isValid) {
+      console.error('❌ Invalid webhook signature for organization:', organizationId);
+    } else {
+      console.log('✅ Webhook signature verified for organization:', organizationId);
+    }
+    
+    return isValid;
+    
   } catch (error) {
     console.error('❌ Signature verification error:', error);
     return false;
@@ -36,26 +115,43 @@ function verifyVAPISignature(rawBody: string, signature?: string): boolean {
 /**
  * Main VAPI webhook handler - processes all VAPI webhook events
  * CRITICAL: Responds 200 immediately and processes async
+ * Now includes proper signature verification using organization's public key
  */
 router.post('/webhook', async (req: RequestWithRawBody, res: Response) => {
   const startTime = Date.now();
   
   try {
-    // 1. IMMEDIATELY acknowledge receipt (within 1 second)
-    res.status(200).json({ received: true });
-    console.log('✅ Webhook acknowledged in', Date.now() - startTime, 'ms');
-    
-    // 2. Verify signature if configured
-    const signature = req.headers['x-vapi-signature'] as string;
-    if (req.rawBody && !verifyVAPISignature(req.rawBody, signature)) {
-      console.error('❌ Invalid webhook signature');
-      // Don't process invalid webhooks
-      return;
-    }
-    
-    // 3. Parse payload
+    // 1. Parse payload first to get call data for org lookup
     const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const { type, call, assistant, phoneNumber, message, transcript } = payload;
+    
+    // 2. Verify signature using organization's public key
+    const signature = req.headers['x-vapi-signature'] as string;
+    if (req.rawBody) {
+      const isValidSignature = await verifyVAPISignature(req.rawBody, signature, call);
+      
+      if (!isValidSignature) {
+        console.error('❌ Invalid webhook signature, rejecting webhook');
+        // Return 401 to indicate signature verification failed
+        return res.status(401).json({ 
+          error: 'Invalid signature',
+          message: 'Webhook signature verification failed'
+        });
+      }
+    } else {
+      console.warn('⚠️ No raw body available for signature verification');
+      // In production, this should be rejected
+      if (process.env.NODE_ENV === 'production') {
+        return res.status(400).json({ 
+          error: 'Bad request',
+          message: 'Raw body required for signature verification'
+        });
+      }
+    }
+    
+    // 3. IMMEDIATELY acknowledge receipt (within 1 second)
+    res.status(200).json({ received: true });
+    console.log('✅ Webhook acknowledged in', Date.now() - startTime, 'ms');
     
     // 4. Generate event ID for idempotency
     const eventId = payload.id || `${type}-${call?.id}-${Date.now()}`;
@@ -67,7 +163,7 @@ router.post('/webhook', async (req: RequestWithRawBody, res: Response) => {
     }
     processedEvents.add(eventId);
     
-    // 6. Log ALL webhook types to understand what VAPI sends
+    // 6. Log webhook details
     console.log('📞 VAPI Webhook Received:', {
       type,
       eventId,
@@ -75,9 +171,7 @@ router.post('/webhook', async (req: RequestWithRawBody, res: Response) => {
       hasTranscript: !!transcript || !!call?.transcript || !!message?.transcript,
       hasCost: call?.cost !== undefined,
       hasDuration: call?.duration !== undefined,
-      allKeys: Object.keys(payload),
-      messageKeys: message ? Object.keys(message) : [],
-      callKeys: call ? Object.keys(call) : []
+      organizationId: await getOrganizationFromCall(call)
     });
     
     // 7. Store raw webhook for debugging
@@ -95,7 +189,10 @@ router.post('/webhook', async (req: RequestWithRawBody, res: Response) => {
     
   } catch (error) {
     console.error('❌ Webhook handler error:', error);
-    // Response already sent, just log the error
+    // If we haven't sent a response yet, send error
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 });
 
@@ -107,18 +204,21 @@ async function processWebhookAsync(type: string, payload: any): Promise<void> {
   
   console.log(`⚙️ Processing ${type} event asynchronously`);
   
+  // Get organization ID for the call
+  const organizationId = await getOrganizationFromCall(call);
+  
   switch (type) {
     case 'call-started':
-      await handleCallStarted(call);
+      await handleCallStarted(call, organizationId);
       break;
     
     case 'call-ended':
     case 'end-of-call-report':
-      await handleCallEnded(call);
+      await handleCallEnded(call, organizationId);
       // Schedule transcript fetch if not present
       if (!call?.transcript && !transcript) {
         console.log('📝 No transcript in call-ended, scheduling fetch...');
-        scheduleTranscriptFetch(call?.id, 5000);
+        scheduleTranscriptFetch(call?.id, organizationId, 5000);
       }
       break;
     
@@ -128,13 +228,13 @@ async function processWebhookAsync(type: string, payload: any): Promise<void> {
       // Handle transcript as separate event
       const transcriptText = transcript || message?.transcript || payload.transcript;
       if (transcriptText && (call?.id || payload.callId)) {
-        await handleTranscript(call?.id || payload.callId, transcriptText);
+        await handleTranscript(call?.id || payload.callId, transcriptText, organizationId);
       }
       break;
     
     case 'analysis-complete':
       if (analysis && call?.id) {
-        await handleAnalysis(call?.id, analysis);
+        await handleAnalysis(call?.id, analysis, organizationId);
       }
       break;
     
@@ -155,7 +255,6 @@ async function processWebhookAsync(type: string, payload: any): Promise<void> {
     
     default:
       console.log(`⚠️ Unhandled webhook type: ${type}`);
-      // Still store it for debugging
       break;
   }
 }
@@ -163,12 +262,12 @@ async function processWebhookAsync(type: string, payload: any): Promise<void> {
 /**
  * Handle call started event
  */
-async function handleCallStarted(call: any): Promise<void> {
+async function handleCallStarted(call: any, organizationId: string | null): Promise<void> {
   if (!call?.id) return;
   
-  console.log('📞 Call started:', call.id);
+  console.log('📞 Call started:', call.id, 'for org:', organizationId);
   
-  const updateData = {
+  const updateData: any = {
     vapi_call_id: call.id,
     status: 'in-progress',
     started_at: call.startedAt || new Date().toISOString(),
@@ -176,6 +275,11 @@ async function handleCallStarted(call: any): Promise<void> {
     assistant_id: call.assistantId,
     updated_at: new Date().toISOString()
   };
+  
+  // Include organization ID if we have it
+  if (organizationId) {
+    updateData.organization_id = organizationId;
+  }
   
   // Try to update existing call or create new one
   const { error } = await supabaseService
@@ -192,14 +296,15 @@ async function handleCallStarted(call: any): Promise<void> {
 /**
  * Handle call ended event
  */
-async function handleCallEnded(call: any): Promise<void> {
+async function handleCallEnded(call: any, organizationId: string | null): Promise<void> {
   if (!call?.id) return;
   
   console.log('📞 Call ended:', {
     id: call.id,
     duration: call.duration,
     cost: call.cost,
-    hasTranscript: !!call.transcript
+    hasTranscript: !!call.transcript,
+    organizationId
   });
   
   const updateData: any = {
@@ -245,7 +350,11 @@ async function handleCallEnded(call: any): Promise<void> {
 /**
  * Handle transcript event (separate from call-ended)
  */
-async function handleTranscript(callId: string, transcript: string): Promise<void> {
+async function handleTranscript(
+  callId: string, 
+  transcript: string,
+  organizationId: string | null
+): Promise<void> {
   if (!callId || !transcript) return;
   
   console.log('📝 Transcript received for call:', callId, '- Length:', transcript.length);
@@ -273,7 +382,11 @@ async function handleTranscript(callId: string, transcript: string): Promise<voi
 /**
  * Handle analysis complete event
  */
-async function handleAnalysis(callId: string, analysis: any): Promise<void> {
+async function handleAnalysis(
+  callId: string, 
+  analysis: any,
+  organizationId: string | null
+): Promise<void> {
   if (!callId || !analysis) return;
   
   console.log('🔍 Analysis received for call:', callId);
@@ -327,39 +440,46 @@ async function updateRecordingUrl(callId: string, recordingUrl: string): Promise
 /**
  * Schedule transcript fetch via API if webhook doesn't deliver it
  */
-function scheduleTranscriptFetch(callId: string, delayMs: number, attempts = 0): void {
+function scheduleTranscriptFetch(
+  callId: string, 
+  organizationId: string | null,
+  delayMs: number, 
+  attempts = 0
+): void {
   if (!callId || attempts > 5) return;
   
   setTimeout(async () => {
     try {
       console.log(`🔄 Fetching transcript via API for call ${callId} (attempt ${attempts + 1})`);
       
-      const response = await fetch(`https://api.vapi.ai/call/${callId}`, {
-        headers: {
-          'Authorization': `Bearer ${process.env.VAPI_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      // Get VAPI service for the organization
+      if (!organizationId) {
+        console.error('❌ No organization ID for transcript fetch');
+        return;
+      }
       
-      if (response.ok) {
-        const callData = await response.json();
-        
-        if (callData.transcript) {
-          console.log('✅ Transcript fetched via API');
-          await handleTranscript(callId, callData.transcript);
-        } else {
-          console.log('⏳ Transcript not ready yet, retrying...');
-          // Exponential backoff
-          scheduleTranscriptFetch(callId, delayMs * 2, attempts + 1);
-        }
+      const vapiService = await VAPIIntegrationService.forOrganization(organizationId);
+      if (!vapiService) {
+        console.error('❌ Could not create VAPI service for organization');
+        return;
+      }
+      
+      // Fetch call details using the service
+      const callData = await vapiService.getCall(callId);
+      
+      if (callData?.transcript) {
+        console.log('✅ Transcript fetched via API');
+        await handleTranscript(callId, callData.transcript, organizationId);
       } else {
-        console.error('❌ Failed to fetch call from API:', response.status);
+        console.log('⏳ Transcript not ready yet, retrying...');
+        // Exponential backoff
+        scheduleTranscriptFetch(callId, organizationId, delayMs * 2, attempts + 1);
       }
     } catch (error) {
       console.error('❌ Error fetching transcript:', error);
       // Retry with backoff
       if (attempts < 5) {
-        scheduleTranscriptFetch(callId, delayMs * 2, attempts + 1);
+        scheduleTranscriptFetch(callId, organizationId, delayMs * 2, attempts + 1);
       }
     }
   }, delayMs);
@@ -448,8 +568,8 @@ router.get('/status', async (req: Request, res: Response) => {
       status: '/api/vapi-enhanced/status'
     },
     configuration: {
-      hasWebhookSecret: !!process.env.VAPI_WEBHOOK_SECRET,
-      hasVAPIKey: !!process.env.VAPI_API_KEY
+      signatureVerification: 'enabled',
+      requiresRawBody: true
     },
     supportedEventTypes: [
       'call-started',
