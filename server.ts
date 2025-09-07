@@ -29,6 +29,7 @@ import platformAnalyticsRouter from './api/platform-analytics';
 import debugVapiRouter from './api/debug-vapi';
 import invitationsRouter from './api/invitations';
 import vapiCredentialsRouter from './api/vapi-credentials';
+import vapiSyncRouter from './api/vapi-sync';
 import testVapiRouter from './api/test-vapi';
 import vapiDataRouter from './api/vapi-data';
 import debugVapiTestRouter from './api/debug-vapi-test';
@@ -217,6 +218,7 @@ app.use('/api/platform-analytics', authenticateUser, platformAnalyticsRouter);
 app.use('/api/vapi-outbound', authenticateUser, vapiOutboundRouter);
 app.use('/api/debug-vapi', authenticateUser, debugVapiRouter);
 app.use('/api/vapi-credentials', authenticateUser, vapiCredentialsRouter);
+app.use('/api/vapi-sync', authenticateUser, vapiSyncRouter);
 app.use('/api/test-vapi', authenticateUser, testVapiRouter);
 app.use('/api/vapi-data', authenticateUser, vapiDataRouter);
 app.use('/api/debug-vapi-test', debugVapiTestRouter); // No auth for debugging
